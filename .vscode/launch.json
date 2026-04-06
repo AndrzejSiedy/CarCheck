@@ -1,0 +1,34 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "CarCheck — AutoTrader",
+      "type": "chrome",
+      "request": "launch",
+      "runtimeArgs": [
+        "--load-extension=${workspaceFolder}/dist",
+        "--user-data-dir=${workspaceFolder}/.chrome-dev-profile",
+        "--no-first-run",
+        "--no-default-browser-check"
+      ],
+      "url": "https://www.autotrader.co.uk",
+      "webRoot": "${workspaceFolder}/src",
+      "sourceMapPathOverrides": {
+        "webpack:///./src/*": "${webRoot}/*"
+      }
+    },
+    {
+      "name": "CarCheck — eBay Motors",
+      "type": "chrome",
+      "request": "launch",
+      "runtimeArgs": [
+        "--load-extension=${workspaceFolder}/dist",
+        "--user-data-dir=${workspaceFolder}/.chrome-dev-profile",
+        "--no-first-run",
+        "--no-default-browser-check"
+      ],
+      "url": "https://www.ebay.co.uk",
+      "webRoot": "${workspaceFolder}/src"
+    }
+  ]
+}

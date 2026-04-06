@@ -7,11 +7,14 @@
   "scripts": {
     "build": "node build.js",
     "watch": "node build.js --watch",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "dev": "concurrently -n esbuild,chrome -c blue,green \"node build.js --watch\" \"web-ext run\""
   },
   "devDependencies": {
     "@types/chrome": "^0.0.268",
+    "concurrently": "^9.2.1",
     "esbuild": "^0.24.0",
-    "typescript": "^5.7.0"
+    "typescript": "^5.7.0",
+    "web-ext": "^10.1.0"
   }
 }
