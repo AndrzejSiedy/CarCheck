@@ -33,6 +33,23 @@ Chrome extension for UK car buyers. Reads plates via OCR, fetches DVSA MOT histo
 
 ---
 
+## Session memory — READ THIS FIRST
+
+**Before reading any project files**, check the memory index:
+`C:\Users\wilk\.claude\projects\d--Projects-Claude-carcheck\memory\MEMORY.md`
+
+The memory index is always loaded in context. If it references a `project_status.md`, read that file — it contains the current development state, last completed work, and what comes next. This avoids redundant file scanning at the start of every session.
+
+**At the end of every session** (or after completing a meaningful chunk of work), update `project_status.md` with:
+
+- What was just implemented (commit-level summary)
+- What is next (the immediate next task, not a full roadmap)
+- Any decisions made that aren't obvious from the code
+
+Keep `project_status.md` short and current. It is the handoff note to the next session.
+
+---
+
 ## How to work with me
 
 ## Your role
