@@ -12,12 +12,12 @@ Build order follows the **Walking Skeleton** principle: get one end-to-end slice
 
 **`src/manifest.json`** — already scaffolded, no changes needed.
 
-**`src/scoring/engine.js`** — implement the five scoring rules against mock data:
+**`src/scoring/engine.ts`** — implement the five scoring rules against mock data:
 
-```js
+```ts
 // Input: MotHistory object (mock)
 // Output: { score: number, verdict: string, flags: Flag[] }
-function score(motHistory) { ... }
+function score(motHistory: MotHistory): ScoringResult { ... }
 ```
 
 Five rules in order:
@@ -27,31 +27,39 @@ Five rules in order:
 4. Gap between test dates — flag > 13 months
 5. Clean streak bonus — consecutive passes
 
-**`src/scoring/dictionary.js`** — seed with ~20 real advisory phrases from DVSA data, each with category + severity 1–10. Used by engine to weight advisory scores.
+**`src/scoring/dictionary.ts`** — seed with ~20 real advisory phrases from DVSA data, each with category + severity 1–10. Used by engine to weight advisory scores.
 
-**`src/utils/vrm.js`** — UK VRM regex validator:
+**`src/utils/vrm.ts`** — UK VRM regex validator:
 
-```js
+```ts
 // Validates: AB12 CDE (current), A123 BCD (prefix), ABC 123D (suffix)
-function isValidVRM(str) { ... }
-function normalise(str) { ... } // strips spaces, uppercase
+function isValidVRM(str: string): boolean { ... }
+function normalise(str: string): string { ... } // strips spaces, uppercase
 ```
 
-**`src/content/content.js`** — inject a floating input bar on supported listing pages:
+**`src/types/mot.ts`** — shared type definitions:
+
+```ts
+interface MotHistory { ... }
+interface ScoringResult { score: number; verdict: string; flags: Flag[] }
+interface Flag { label: string; severity: number; category: string }
+```
+
+**`src/content/content.ts`** — inject a floating input bar on supported listing pages:
 - Small "Check MOT" bar injected at top of page (Shadow DOM)
 - Text input + submit button
 - On submit: validate VRM → send message to background → receive verdict → inject badge next to listing title
 
-**`src/background/background.js`** — message handler:
+**`src/background/background.ts`** — message handler:
 - Listen for `CHECK_VRM` message from content script
 - For now: return mock DVSA data → run scoring engine → return result
 - (Real DVSA call added in Phase 1)
 
-**`src/utils/cache.js`** — `chrome.storage.local` wrapper:
+**`src/utils/cache.ts`** — `chrome.storage.local` wrapper:
 
-```js
-async function getCached(vrm) { ... }    // returns result or null
-async function setCache(vrm, result) { ... } // stores with 24hr TTL
+```ts
+async function getCached(vrm: string): Promise<ScanResult | null> { ... }
+async function setCache(vrm: string, result: ScanResult): Promise<void> { ... }
 ```
 
 **Test:** Load unpacked extension → open any AutoTrader listing → type `LD19KXA` → see green/amber/red badge appear.
@@ -64,9 +72,9 @@ async function setCache(vrm, result) { ... } // stores with 24hr TTL
 
 ### What to build
 
-**`src/background/background.js`** — add DVSA fetch:
+**`src/background/background.ts`** — add DVSA fetch:
 
-```js
+```ts
 // DVSA MOT History API v1
 // GET https://history.mot.api.gov.uk/v1/trade/vehicles/registration/{vrm}
 // Auth: x-api-key header
@@ -90,7 +98,7 @@ async function setCache(vrm, result) { ... } // stores with 24hr TTL
 
 ### What to build
 
-**`src/ocr/capture.js`** — OCR overlay, matching `in_page_ocr_overlay_velocity` design:
+**`src/ocr/capture.ts`** — OCR overlay, matching `in_page_ocr_overlay_velocity` design:
 
 - Inject full-page overlay on user action (keyboard shortcut or toolbar button click)
 - Overlay: `rgba(0,0,0,0.4)` + `cursor: crosshair`
@@ -99,7 +107,7 @@ async function setCache(vrm, result) { ... } // stores with 24hr TTL
 - Tesseract.js: lazy-loaded (`import()`) — not bundled upfront
 - Extract text → run VRM regex → if valid, auto-submit; if not, show editable text input pre-filled with OCR result
 
-**`src/content/content.js`** — add keyboard shortcut listener (`Alt+C`) to trigger OCR overlay.
+**`src/content/content.ts`** — add keyboard shortcut listener (`Alt+C`) to trigger OCR overlay.
 
 **`src/manifest.json`** — add `commands` for keyboard shortcut.
 
@@ -123,7 +131,7 @@ async function loadTesseract() {
 
 ### What to build
 
-**`src/content/content.js`** — replace floating bar with verdict badge (inline on listing title) that expands to full result panel on click.
+**`src/content/content.ts`** — replace floating bar with verdict badge (inline on listing title) that expands to full result panel on click.
 
 **Result panel** (`full_result_panel_velocity` design):
 - 360px fixed right-side drawer, Shadow DOM
@@ -137,7 +145,7 @@ async function loadTesseract() {
 - 28px pill, 3px left border, 15% tint background
 - Green (pass) / Amber (advisory) / Red (critical)
 
-**`src/popup/popup.html` + `popup.js`** (`extension_popup_velocity` design):
+**`src/popup/popup.html` + `popup.ts`** (`extension_popup_velocity` design):
 - 360×500px fixed
 - Scrollable shortlist cards (make/model, source, timestamp, verdict chip, mileage)
 - Footer: Compare + Full HPI Check buttons
@@ -160,28 +168,28 @@ async function loadTesseract() {
 
 ### What to build
 
-**`src/utils/cache.js`** — add usage metering:
+**`src/utils/cache.ts`** — add usage metering:
 
-```js
-async function getMonthlyUsage() { ... }   // returns count for current month
-async function incrementUsage() { ... }
-async function isWithinFreeLimit() { ... } // limit: 3/month
+```ts
+async function getMonthlyUsage(): Promise<number> { ... }
+async function incrementUsage(): Promise<void> { ... }
+async function isWithinFreeLimit(): Promise<boolean> { ... } // limit: 3/month
 ```
 
-**`src/content/content.js`** — before calling background:
+**`src/content/content.ts`** — before calling background:
 - Check `isWithinFreeLimit()`
 - If over limit: show upgrade prompt instead of scanning
 
 **Upgrade prompt** — reuses result panel slot; shows locked state with pricing (£0.99 / £4.99 / £9.99).
 
 **`backend/api/`** — Vercel serverless functions (scaffolded, not yet wired):
-- `check-vrm.js` — authenticated DVSA proxy (moves API key off client)
-- `create-checkout.js` — Stripe checkout session
-- `webhook.js` — Stripe webhook handler
+- `check-vrm.ts` — authenticated DVSA proxy (moves API key off client)
+- `create-checkout.ts` — Stripe checkout session
+- `webhook.ts` — Stripe webhook handler
 
 **`backend/lib/`** — shared utilities:
-- `supabase.js` — Supabase client
-- `stripe.js` — Stripe client
+- `supabase.ts` — Supabase client
+- `stripe.ts` — Stripe client
 
 **Test:** Run 3 scans → 4th scan shows upgrade prompt. Stripe checkout opens (test mode).
 
@@ -195,15 +203,15 @@ async function isWithinFreeLimit() { ... } // limit: 3/month
 
 **Auth flow** — Supabase magic link via popup; store JWT in `chrome.storage.local`.
 
-**`src/background/background.js`** — for authenticated users:
+**`src/background/background.ts`** — for authenticated users:
 - Route DVSA calls through backend proxy (instead of direct API call)
 - Include auth token in request headers
 
-**`src/ocr/capture.js`** — paid tier: send cropped image to backend → Google Cloud Vision → return VRM. Fallback to Tesseract.js if backend unavailable.
+**`src/ocr/capture.ts`** — paid tier: send cropped image to backend → Google Cloud Vision → return VRM. Fallback to Tesseract.js if backend unavailable.
 
-**`backend/api/narrative.js`** — Claude Haiku call:
+**`backend/api/narrative.ts`** — Claude Haiku call:
 
-```js
+```ts
 // Input: scored MotHistory
 // Output: 2-3 sentence plain-English verdict
 // Model: claude-haiku-4-5-20251001
@@ -220,27 +228,29 @@ async function isWithinFreeLimit() { ... } // limit: 3/month
 
 | File | Phase |
 |---|---|
-| `src/utils/vrm.js` | 0 |
-| `src/utils/cache.js` | 0, 4 |
-| `src/scoring/engine.js` | 0 |
-| `src/scoring/dictionary.js` | 0 |
-| `src/content/content.js` | 0, 2, 3 |
-| `src/background/background.js` | 0, 1, 5 |
-| `src/ocr/capture.js` | 2, 5 |
-| `src/popup/popup.html/js/css` | 3 |
+| `src/utils/vrm.ts` | 0 |
+| `src/utils/cache.ts` | 0, 4 |
+| `src/scoring/engine.ts` | 0 |
+| `src/scoring/dictionary.ts` | 0 |
+| `src/content/content.ts` | 0, 2, 3 |
+| `src/background/background.ts` | 0, 1, 5 |
+| `src/ocr/capture.ts` | 2, 5 |
+| `src/popup/popup.html` + `popup.ts/css` | 3 |
 | `src/styles/tokens.css` | 3 |
-| `backend/api/check-vrm.js` | 4 |
-| `backend/api/create-checkout.js` | 4 |
-| `backend/api/webhook.js` | 4 |
-| `backend/api/narrative.js` | 5 |
-| `backend/lib/supabase.js` | 4 |
-| `backend/lib/stripe.js` | 4 |
+| `src/types/mot.ts` | 0 |
+| `build.js` (esbuild config) | 0 |
+| `backend/api/check-vrm.ts` | 4 |
+| `backend/api/create-checkout.ts` | 4 |
+| `backend/api/webhook.ts` | 4 |
+| `backend/api/narrative.ts` | 5 |
+| `backend/lib/supabase.ts` | 4 |
+| `backend/lib/stripe.ts` | 4 |
 
 ---
 
 ## Key decisions pre-coded
 
-- **No build tool for Phase 0–2.** Plain ES modules + Chrome's native module support. Add a bundler (esbuild) when Tesseract.js lazy-loading requires it.
+- **TypeScript + esbuild from Phase 0.** All source files are `.ts`. esbuild compiles to `dist/` — manifest points at `dist/` output. No `tsconfig` required for basic esbuild TS support; add one when strict type checking is needed.
 - **Shadow DOM for all injected UI.** Prevents host page CSS leaking into CarCheck UI and vice versa.
 - **Tailwind via CDN for design files.** For production extension: extract only used CSS classes into a static stylesheet — CDN is not usable in extensions.
 - **DVSA API key in Phase 0–1:** stored in `chrome.storage.local` (developer-only). Moves to backend proxy in Phase 4 before any public release.

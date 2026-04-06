@@ -6,8 +6,8 @@ Format: date | decision | rationale
 
 ## 2026-04-06
 
-**No build tool for Phase 0–2.**
-Plain ES modules + Chrome's native module support. A bundler (esbuild) added in Phase 3 when Tesseract.js lazy-loading requires it. Keeps the skeleton simple and loadable without any build step.
+**TypeScript + esbuild from Phase 0.**
+All source files are `.ts`. esbuild compiles to `dist/` — manifest points at compiled output. esbuild handles TS natively with no `tsconfig` required for basic use. Replaces the original "plain ES modules, no build tool" approach. Decision: TS type safety from the start outweighs the minimal setup cost of adding esbuild early.
 
 **Shadow DOM for all injected UI.**
 Prevents host page CSS leaking into CarCheck components and vice versa. Required on Facebook Marketplace and eBay which have aggressive global styles.

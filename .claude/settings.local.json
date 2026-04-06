@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git -C \"d:/Projects/Claude/carcheck/\" status)",
+      "Bash(mv src/background/background.js src/background/background.ts)",
+      "Bash(mv src/content/content.js src/content/content.ts)",
+      "Bash(mv src/ocr/capture.js src/ocr/capture.ts)",
+      "Bash(mv src/popup/popup.js src/popup/popup.ts)",
+      "Bash(mv src/scoring/engine.js src/scoring/engine.ts)"
+    ]
+  }
+}

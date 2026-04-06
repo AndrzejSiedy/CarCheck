@@ -14,6 +14,7 @@ Chrome extension for UK car buyers. Reads plates via OCR, fetches DVSA MOT histo
 
 ## Working rules
 
+- Follow Spec Driven Development pattern
 - Always git pull before starting work
 - Read /docs before writing any code
 - When you discover a design gap or make an implementation decision that changes the design, update the relevant file in /docs and commit it with a clear message before continuing
