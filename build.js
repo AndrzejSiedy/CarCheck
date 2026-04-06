@@ -16,11 +16,12 @@ const sharedConfig = {
 };
 
 // TypeScript entry points → compiled JS bundles
+// 'out' paths are relative to outdir ('dist/')
 const entryPoints = [
-  { in: 'src/background/background.ts', out: 'dist/background/background' },
-  { in: 'src/content/content.ts',       out: 'dist/content/content' },
-  { in: 'src/popup/popup.ts',           out: 'dist/popup/popup' },
-  { in: 'src/ocr/capture.ts',           out: 'dist/ocr/capture' },
+  { in: 'src/background/background.ts', out: 'background/background' },
+  { in: 'src/content/content.ts',       out: 'content/content' },
+  { in: 'src/popup/popup.ts',           out: 'popup/popup' },
+  { in: 'src/ocr/capture.ts',           out: 'ocr/capture' },
 ];
 
 // Copy static assets from src/ to dist/
@@ -34,13 +35,15 @@ function copyStatic() {
   cpSync('src/content/content.css', 'dist/content/content.css');
 }
 
+const buildConfig = { ...sharedConfig, entryPoints, outdir: 'dist' };
+
 if (watch) {
-  const ctx = await esbuild.context({ ...sharedConfig, entryPoints });
+  const ctx = await esbuild.context(buildConfig);
   await ctx.watch();
   copyStatic();
   console.log('Watching for changes...');
 } else {
-  await esbuild.build({ ...sharedConfig, entryPoints });
+  await esbuild.build(buildConfig);
   copyStatic();
   console.log('Build complete → dist/');
 }
