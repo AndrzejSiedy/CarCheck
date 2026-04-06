@@ -1,7 +1,9 @@
 // Content script — listing detection, OCR overlay injection, verdict display
 // Phase 0: floating "Check MOT" text input bar, injected via Shadow DOM.
+// Phase 2: Alt+C triggers OCR drag-select overlay.
 
 import { isValidVRM, normalise } from '../utils/vrm';
+import { showOCROverlay } from '../ocr/capture';
 import type { ScanResult } from '../types/mot';
 
 // ─── listing site detection ───────────────────────────────────────────────────
@@ -179,6 +181,20 @@ function inject(source: Source): void {
   btn.addEventListener('click', submit);
   input.addEventListener('keydown', (e: KeyboardEvent) => {
     if (e.key === 'Enter') submit();
+  });
+
+  // Alt+C — show OCR drag-select overlay
+  document.addEventListener('keydown', (e: KeyboardEvent) => {
+    if (e.altKey && e.key === 'c') {
+      e.preventDefault();
+      showOCROverlay(
+        (vrm) => {
+          input.value = vrm;
+          submit();
+        },
+        () => { /* overlay cancelled — do nothing */ }
+      );
+    }
   });
 }
 

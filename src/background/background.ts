@@ -92,12 +92,19 @@ async function handleCheckVrm(vrm: string, source: ScanResult['source']): Promis
 }
 
 chrome.runtime.onMessage.addListener(
-  (message: CheckVrmMessage, _sender, sendResponse) => {
+  (message: CheckVrmMessage | { type: 'CAPTURE_TAB' }, _sender, sendResponse) => {
     if (message.type === 'CHECK_VRM') {
-      handleCheckVrm(message.vrm, message.source)
+      handleCheckVrm((message as CheckVrmMessage).vrm, (message as CheckVrmMessage).source)
         .then(sendResponse)
         .catch(() => sendResponse({ ok: false, error: 'UNKNOWN' }));
-      return true; // keep message channel open for async response
+      return true;
+    }
+
+    if (message.type === 'CAPTURE_TAB') {
+      chrome.tabs.captureVisibleTab({ format: 'png' })
+        .then(dataUrl => sendResponse({ dataUrl }))
+        .catch(() => sendResponse({ dataUrl: null }));
+      return true;
     }
   }
 );

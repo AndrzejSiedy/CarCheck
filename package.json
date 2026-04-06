@@ -16,5 +16,8 @@
     "esbuild": "^0.24.0",
     "typescript": "^5.7.0",
     "web-ext": "^10.1.0"
+  },
+  "dependencies": {
+    "tesseract.js": "^7.0.0"
   }
 }

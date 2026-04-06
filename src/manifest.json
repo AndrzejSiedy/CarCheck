@@ -3,7 +3,7 @@
   "name": "CarCheck",
   "version": "0.1.0",
   "description": "Instant MOT insights for UK car buyers",
-  "permissions": ["activeTab", "storage"],
+  "permissions": ["activeTab", "storage", "tabs"],
   "host_permissions": [
     "https://www.autotrader.co.uk/*",
     "https://www.ebay.co.uk/*",
@@ -12,6 +12,12 @@
   ],
   "action": {
     "default_popup": "popup/popup.html"
+  },
+  "commands": {
+    "activate-ocr": {
+      "suggested_key": { "default": "Alt+C" },
+      "description": "Drag to scan a number plate"
+    }
   },
   "content_scripts": [
     {
@@ -27,5 +33,18 @@
   ],
   "background": {
     "service_worker": "background/background.js"
-  }
+  },
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "lib/worker.min.js",
+        "lib/tesseract-core-simd-lstm.wasm",
+        "lib/tesseract-core-simd-lstm.js",
+        "lib/tesseract-core-lstm.wasm",
+        "lib/tesseract-core-lstm.js",
+        "lib/eng.traineddata.gz"
+      ],
+      "matches": ["<all_urls>"]
+    }
+  ]
 }
