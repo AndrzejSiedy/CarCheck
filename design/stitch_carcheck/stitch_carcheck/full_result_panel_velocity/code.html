@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>CarCheck - Vehicle Diagnostics</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container-lowest": "#ffffff",
+                        "on-tertiary": "#ffffff",
+                        "secondary-container": "#d5e3fc",
+                        "tertiary-fixed-dim": "#ffb59a",
+                        "secondary-fixed": "#d5e3fc",
+                        "on-surface-variant": "#434653",
+                        "on-secondary": "#ffffff",
+                        "on-background": "#191c1e",
+                        "on-primary-fixed": "#001946",
+                        "on-primary-fixed-variant": "#00419e",
+                        "on-error-container": "#93000a",
+                        "error-container": "#ffdad6",
+                        "error": "#ba1a1a",
+                        "on-secondary-fixed": "#0d1c2e",
+                        "surface-variant": "#e0e3e5",
+                        "tertiary-fixed": "#ffdbcf",
+                        "surface-dim": "#d8dadc",
+                        "surface-tint": "#2559bd",
+                        "on-primary": "#ffffff",
+                        "surface-container-highest": "#e0e3e5",
+                        "surface-container-high": "#e6e8ea",
+                        "primary-fixed": "#dae2ff",
+                        "on-error": "#ffffff",
+                        "on-primary-container": "#a5bdff",
+                        "secondary": "#515f74",
+                        "outline": "#737784",
+                        "surface-container": "#eceef0",
+                        "primary-fixed-dim": "#b1c5ff",
+                        "on-tertiary-container": "#ffaa8a",
+                        "surface-bright": "#f7f9fb",
+                        "tertiary-container": "#8b2e01",
+                        "tertiary": "#651f00",
+                        "secondary-fixed-dim": "#b9c7df",
+                        "on-tertiary-fixed": "#380d00",
+                        "primary-container": "#0047ab",
+                        "outline-variant": "#c3c6d5",
+                        "on-secondary-fixed-variant": "#3a485b",
+                        "background": "#f7f9fb",
+                        "inverse-primary": "#b1c5ff",
+                        "primary": "#00327d",
+                        "inverse-surface": "#2d3133",
+                        "on-secondary-container": "#57657a",
+                        "surface-container-low": "#f2f4f6",
+                        "on-surface": "#191c1e",
+                        "inverse-on-surface": "#eff1f3",
+                        "surface": "#f7f9fb",
+                        "on-tertiary-fixed-variant": "#802900"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "fontFamily": {
+                        "headline": ["Inter"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-surface text-on-surface overflow-hidden">
+<!-- Background Simulation for Context -->
+<main class="fixed inset-0 flex items-center justify-center p-8 blur-sm">
+<div class="max-w-4xl w-full grid grid-cols-2 gap-8 opacity-20">
+<div class="h-64 bg-surface-container-highest rounded-lg"></div>
+<div class="h-64 bg-surface-container-highest rounded-lg"></div>
+<div class="h-64 bg-surface-container-highest rounded-lg"></div>
+<div class="h-64 bg-surface-container-highest rounded-lg"></div>
+</div>
+</main>
+<!-- SideNavBar (The Result Panel) -->
+<!-- Applying Shared Component JSON Styles for SideNavBar -->
+<aside class="h-full w-[360px] fixed right-0 border-l border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 shadow-2xl dark:shadow-none flex flex-col font-inter z-50">
+<!-- Header Section -->
+<header class="px-6 pt-8 pb-4 space-y-4">
+<div class="flex justify-between items-start">
+<div class="bg-[#FFD500] px-3 py-1 rounded shadow-sm flex items-center">
+<span class="text-black font-extrabold tracking-tighter text-xl">LD19 KXA</span>
+</div>
+<div class="flex items-center space-x-1 bg-green-100 text-green-800 px-3 py-1 rounded-full text-xs font-bold">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span>PASS</span>
+</div>
+</div>
+<div class="space-y-1">
+<h1 class="text-xl font-black text-blue-900 dark:text-blue-100 tracking-tight">Porsche 911 Carrera S</h1>
+<p class="text-[10px] font-semibold text-slate-500 uppercase tracking-widest">Precision Data Engine / Diagnostics</p>
+</div>
+</header>
+<!-- Separation Line -->
+<div class="h-[1px] bg-slate-200 dark:bg-slate-800 mx-6"></div>
+<!-- Scrollable Content Area -->
+<div class="flex-1 overflow-y-auto px-6 py-6 space-y-8">
+<!-- MOT Timeline Section -->
+<section>
+<h2 class="font-inter uppercase tracking-widest text-[10px] font-semibold text-blue-800 dark:text-blue-500 mb-4">MOT Timeline</h2>
+<div class="flex items-center justify-between relative">
+<div class="absolute top-1/2 left-0 w-full h-[2px] bg-slate-200 -translate-y-1/2 z-0"></div>
+<!-- Timeline Points -->
+<div class="relative z-10 flex flex-col items-center">
+<div class="w-6 h-6 rounded-full bg-green-500 flex items-center justify-center text-[10px] text-white font-bold">P</div>
+<span class="text-[9px] mt-2 font-medium text-slate-400">2023</span>
+</div>
+<div class="relative z-10 flex flex-col items-center">
+<div class="w-6 h-6 rounded-full bg-green-500 flex items-center justify-center text-[10px] text-white font-bold">P</div>
+<span class="text-[9px] mt-2 font-medium text-slate-400">2022</span>
+</div>
+<div class="relative z-10 flex flex-col items-center">
+<div class="w-6 h-6 rounded-full bg-error flex items-center justify-center text-[10px] text-white font-bold">F</div>
+<span class="text-[9px] mt-2 font-medium text-slate-400">2021</span>
+</div>
+<div class="relative z-10 flex flex-col items-center">
+<div class="w-6 h-6 rounded-full bg-green-500 flex items-center justify-center text-[10px] text-white font-bold">P</div>
+<span class="text-[9px] mt-2 font-medium text-slate-400">2020</span>
+</div>
+<div class="relative z-10 flex flex-col items-center">
+<div class="w-6 h-6 rounded-full bg-green-500 flex items-center justify-center text-[10px] text-white font-bold">P</div>
+<span class="text-[9px] mt-2 font-medium text-slate-400">2019</span>
+</div>
+</div>
+</section>
+<!-- Key Flags Section -->
+<section class="bg-surface-container-low p-4 rounded-lg">
+<h2 class="font-inter uppercase tracking-widest text-[10px] font-semibold text-tertiary mb-3 flex items-center gap-2">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">warning</span>
+                    System Alerts
+                </h2>
+<ul class="space-y-3">
+<li class="flex items-start gap-3">
+<span class="text-tertiary mt-0.5 material-symbols-outlined text-xs">fiber_manual_record</span>
+<p class="text-xs text-on-surface leading-snug">Mileage gap detected between 2021-2022</p>
+</li>
+<li class="flex items-start gap-3">
+<span class="text-tertiary mt-0.5 material-symbols-outlined text-xs">fiber_manual_record</span>
+<p class="text-xs text-on-surface leading-snug">Multiple tire advisories on latest check</p>
+</li>
+</ul>
+</section>
+<!-- Score Breakdown Section (Bento Chips) -->
+<section class="space-y-4">
+<h2 class="font-inter uppercase tracking-widest text-[10px] font-semibold text-blue-800 dark:text-blue-500">Score Breakdown</h2>
+<div class="grid grid-cols-2 gap-2">
+<div class="bg-white dark:bg-slate-900 p-3 rounded-lg border border-slate-100 dark:border-slate-800 flex flex-col">
+<span class="text-[9px] text-slate-400 font-bold uppercase mb-1">Latest Test</span>
+<span class="text-sm font-bold text-blue-900 dark:text-blue-200">14 Oct 2023</span>
+</div>
+<div class="bg-white dark:bg-slate-900 p-3 rounded-lg border border-slate-100 dark:border-slate-800 flex flex-col">
+<span class="text-[9px] text-slate-400 font-bold uppercase mb-1">Advisories</span>
+<span class="text-sm font-bold text-on-surface">2 Found</span>
+</div>
+<div class="bg-white dark:bg-slate-900 p-3 rounded-lg border border-slate-100 dark:border-slate-800 flex flex-col">
+<span class="text-[9px] text-slate-400 font-bold uppercase mb-1">Mileage</span>
+<span class="text-sm font-bold text-on-surface">24,502 mi</span>
+</div>
+<div class="bg-white dark:bg-slate-900 p-3 rounded-lg border border-slate-100 dark:border-slate-800 flex flex-col">
+<span class="text-[9px] text-slate-400 font-bold uppercase mb-1">Frequency</span>
+<span class="text-sm font-bold text-on-surface">365 Days</span>
+</div>
+<div class="col-span-2 bg-secondary-container p-3 rounded-lg flex items-center justify-between">
+<div>
+<span class="text-[9px] text-blue-800 font-bold uppercase mb-1 block">History Bonus</span>
+<span class="text-sm font-bold text-blue-900">+15% Reliability</span>
+</div>
+<span class="material-symbols-outlined text-blue-800" style="font-variation-settings: 'FILL' 1;">stars</span>
+</div>
+</div>
+</section>
+</div>
+<!-- Footer / CTA Section -->
+<footer class="p-6 bg-white dark:bg-slate-900 border-t border-slate-100 dark:border-slate-800 space-y-3">
+<button class="w-full bg-primary hover:bg-primary-container text-on-primary py-3 px-4 rounded font-bold text-xs uppercase tracking-widest transition-colors flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-sm">bookmark</span>
+                SAVE TO SHORTLIST
+            </button>
+<button class="w-full border border-outline-variant hover:bg-surface-container-low text-on-surface py-3 px-4 rounded font-bold text-xs uppercase tracking-widest transition-colors flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-sm">lock</span>
+                GET FULL REPORT
+            </button>
+<!-- SideNavBar Tabs Logic from JSON -->
+<div class="pt-6 flex justify-between">
+<div class="flex flex-col items-center gap-1 cursor-pointer group">
+<span class="material-symbols-outlined text-lg text-blue-900 font-bold" data-icon="analytics" style="font-variation-settings: 'FILL' 1;">analytics</span>
+<span class="text-[8px] font-black uppercase text-blue-900">DIAGNOSTICS</span>
+<div class="h-0.5 w-full bg-blue-900 mt-1"></div>
+</div>
+<div class="flex flex-col items-center gap-1 cursor-pointer group opacity-40 hover:opacity-100 transition-opacity">
+<span class="material-symbols-outlined text-lg" data-icon="history_edu">history_edu</span>
+<span class="text-[8px] font-bold uppercase">MOT HISTORY</span>
+</div>
+<div class="flex flex-col items-center gap-1 cursor-pointer group opacity-40 hover:opacity-100 transition-opacity">
+<span class="material-symbols-outlined text-lg" data-icon="payments">payments</span>
+<span class="text-[8px] font-bold uppercase">TAX STATUS</span>
+</div>
+<div class="flex flex-col items-center gap-1 cursor-pointer group opacity-40 hover:opacity-100 transition-opacity">
+<span class="material-symbols-outlined text-lg" data-icon="person">person</span>
+<span class="text-[8px] font-bold uppercase">ACCOUNT</span>
+</div>
+</div>
+</footer>
+</aside>
+<!-- Overlay Close Trigger (Visual Only) -->
+<div class="fixed inset-0 bg-black/10 z-40"></div>
+</body></html>

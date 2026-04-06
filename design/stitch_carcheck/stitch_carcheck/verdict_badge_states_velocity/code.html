@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>CarCheck - Diagnostic Verdicts</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-container-lowest": "#ffffff",
+                    "on-tertiary": "#ffffff",
+                    "secondary-container": "#d5e3fc",
+                    "tertiary-fixed-dim": "#ffb59a",
+                    "secondary-fixed": "#d5e3fc",
+                    "on-surface-variant": "#434653",
+                    "on-secondary": "#ffffff",
+                    "on-background": "#191c1e",
+                    "on-primary-fixed": "#001946",
+                    "on-primary-fixed-variant": "#00419e",
+                    "on-error-container": "#93000a",
+                    "error-container": "#ffdad6",
+                    "error": "#ba1a1a",
+                    "on-secondary-fixed": "#0d1c2e",
+                    "surface-variant": "#e0e3e5",
+                    "tertiary-fixed": "#ffdbcf",
+                    "surface-dim": "#d8dadc",
+                    "surface-tint": "#2559bd",
+                    "on-primary": "#ffffff",
+                    "surface-container-highest": "#e0e3e5",
+                    "surface-container-high": "#e6e8ea",
+                    "primary-fixed": "#dae2ff",
+                    "on-error": "#ffffff",
+                    "on-primary-container": "#a5bdff",
+                    "secondary": "#515f74",
+                    "outline": "#737784",
+                    "surface-container": "#eceef0",
+                    "primary-fixed-dim": "#b1c5ff",
+                    "on-tertiary-container": "#ffaa8a",
+                    "surface-bright": "#f7f9fb",
+                    "tertiary-container": "#8b2e01",
+                    "tertiary": "#651f00",
+                    "secondary-fixed-dim": "#b9c7df",
+                    "on-tertiary-fixed": "#380d00",
+                    "primary-container": "#0047ab",
+                    "outline-variant": "#c3c6d5",
+                    "on-secondary-fixed-variant": "#3a485b",
+                    "background": "#f7f9fb",
+                    "inverse-primary": "#b1c5ff",
+                    "primary": "#00327d",
+                    "inverse-surface": "#2d3133",
+                    "on-secondary-container": "#57657a",
+                    "surface-container-low": "#f2f4f6",
+                    "on-surface": "#191c1e",
+                    "inverse-on-surface": "#eff1f3",
+                    "surface": "#f7f9fb",
+                    "on-tertiary-fixed-variant": "#802900"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "fontFamily": {
+                    "headline": ["Inter"],
+                    "body": ["Inter"],
+                    "label": ["Inter"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            vertical-align: middle;
+            line-height: 1;
+        }
+        .verdict-badge {
+            height: 28px;
+            display: inline-flex;
+            align-items: center;
+            padding: 0 8px;
+            font-weight: 500;
+            font-size: 12px;
+            border-left-width: 3px;
+            border-radius: 9999px; /* Pill shape */
+        }
+    </style>
+</head>
+<body class="bg-surface font-body text-on-surface">
+<!-- TopNavBar -->
+<header class="bg-white dark:bg-slate-900 flex justify-between items-center px-4 py-3 w-full border-b-0 font-inter tracking-tight">
+<div class="flex items-center gap-6">
+<span class="text-xl font-bold tracking-tighter text-blue-900 dark:text-blue-200">CarCheck</span>
+<div class="hidden md:flex items-center gap-4">
+<nav class="flex gap-4">
+<a class="text-blue-700 dark:text-blue-300 border-b-2 border-blue-700 px-1 py-1 text-sm font-medium" href="#">Diagnostics</a>
+<a class="text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors px-1 py-1 text-sm font-medium" href="#">MOT History</a>
+<a class="text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors px-1 py-1 text-sm font-medium" href="#">Tax Status</a>
+</nav>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<div class="relative hidden sm:block">
+<span class="material-symbols-outlined absolute left-2 top-1/2 -translate-y-1/2 text-slate-400 text-sm">search</span>
+<input class="bg-surface-container-low border-none rounded-lg pl-8 pr-4 py-1.5 text-sm w-48 focus:ring-2 focus:ring-primary focus:bg-surface-container-lowest transition-all" placeholder="Search VIN..." type="text"/>
+</div>
+<button class="material-symbols-outlined text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800 p-2 rounded-full transition-colors">history</button>
+<button class="material-symbols-outlined text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800 p-2 rounded-full transition-colors">settings</button>
+<img alt="User Avatar" class="w-8 h-8 rounded-full border border-outline-variant" data-alt="close-up portrait of a professional male automotive technician with short hair looking confidently into the camera in a modern workshop" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB1-b3gToevM_SlBvGy93TYan93uOwvsbG27jeSemG6K9lBfdPegHjuE2B4yo08sbQ_p-h8WAi1LDR4p5gBY93jaytnxfg2z1CKbEhuRsZlWp7qpCxnE8vkm-XX9pfyaSco1swevK9xoXSEQFHWJpTmouAFSrljMoRh9Z7VyjhWzZBxihd4IXru2h-ujrBwPaSuccGTvXjp3EdsEbRP3HSK17Nee37p5WflvtOClZ4qKv26UcDsdfQ5Vj4KEGydbpDgSJhlUWODMu8"/>
+</div>
+</header>
+<main class="flex min-h-[calc(100vh-64px)] overflow-hidden">
+<!-- Content Canvas -->
+<div class="flex-grow p-8 bg-surface">
+<!-- Breadcrumbs -->
+<nav class="flex items-center gap-2 mb-8 text-xs font-semibold uppercase tracking-widest text-secondary">
+<span>Vehicles</span>
+<span class="material-symbols-outlined text-[10px]">chevron_right</span>
+<span class="text-primary">Diagnostic Report</span>
+</nav>
+<div class="max-w-5xl mx-auto space-y-12">
+<!-- Header Section -->
+<section>
+<h1 class="text-4xl font-extrabold tracking-tight text-on-surface mb-2">Verdict Badge States</h1>
+<p class="text-secondary max-w-2xl body-md">Precision-engineered status indicators for vehicle history validation and clinical data reporting. Built for instant recognition and professional authority.</p>
+</section>
+<!-- The Component Showcase (Bento Style) -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+<!-- Main Showcase Card -->
+<div class="md:col-span-8 bg-surface-container-lowest rounded-xl p-8 relative overflow-hidden flex flex-col justify-center min-h-[400px]">
+<!-- Background Car Listing Card Hint -->
+<div class="absolute -right-12 -bottom-12 w-96 h-64 bg-surface-container-low border border-outline-variant opacity-40 rounded-lg p-6 shadow-sm rotate-3 transform">
+<div class="flex gap-4 mb-4">
+<div class="w-24 h-16 bg-surface-variant rounded"></div>
+<div class="space-y-2">
+<div class="h-4 w-32 bg-surface-variant rounded"></div>
+<div class="h-3 w-20 bg-surface-variant rounded"></div>
+</div>
+</div>
+<div class="h-2 w-full bg-surface-variant rounded-full overflow-hidden">
+<div class="h-full w-2/3 bg-primary"></div>
+</div>
+</div>
+<!-- Verdict Badges UI -->
+<div class="relative z-10 space-y-8">
+<div class="space-y-4">
+<label class="text-[10px] font-bold uppercase tracking-widest text-secondary block">System Status Outputs</label>
+<div class="flex flex-col gap-4">
+<!-- 1. Green Badge -->
+<div class="flex items-center gap-4">
+<div class="verdict-badge bg-green-50 text-green-800 border-green-600">
+<span class="material-symbols-outlined text-sm mr-1.5">check</span>
+                                            Clean history
+                                        </div>
+<span class="text-xs text-secondary font-medium italic">High-confidence pass state</span>
+</div>
+<!-- 2. Amber Badge -->
+<div class="flex items-center gap-4">
+<div class="verdict-badge bg-[#fffcf0] text-tertiary border-[#d4a017]">
+<span class="material-symbols-outlined text-sm mr-1.5">warning</span>
+                                            3 advisories
+                                        </div>
+<span class="text-xs text-secondary font-medium italic">Attention required / Non-critical</span>
+</div>
+<!-- 3. Red Badge -->
+<div class="flex items-center gap-4">
+<div class="verdict-badge bg-error-container text-error border-error">
+<span class="material-symbols-outlined text-sm mr-1.5">close</span>
+                                            Mileage anomaly
+                                        </div>
+<span class="text-xs text-secondary font-medium italic">Critical failure / Validation error</span>
+</div>
+</div>
+</div>
+<div class="pt-8 border-t border-outline-variant border-opacity-20">
+<button class="group flex items-center gap-2 text-primary font-bold text-sm hover:text-primary-container transition-colors">
+                                    Generate Detailed HPI Report
+                                    <span class="material-symbols-outlined group-hover:translate-x-1 transition-transform">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Technical Specs Sidebar -->
+<div class="md:col-span-4 bg-surface-container-low rounded-xl p-6 flex flex-col gap-6">
+<h3 class="text-sm font-bold uppercase tracking-widest text-on-surface">Specification</h3>
+<div class="space-y-4">
+<div class="flex justify-between items-end border-b border-outline-variant border-opacity-20 pb-2">
+<span class="text-[10px] font-semibold text-secondary uppercase">Badge Height</span>
+<span class="text-sm font-bold text-on-surface">28px</span>
+</div>
+<div class="flex justify-between items-end border-b border-outline-variant border-opacity-20 pb-2">
+<span class="text-[10px] font-semibold text-secondary uppercase">Typography</span>
+<span class="text-sm font-bold text-on-surface">Inter 500 / 12px</span>
+</div>
+<div class="flex justify-between items-end border-b border-outline-variant border-opacity-20 pb-2">
+<span class="text-[10px] font-semibold text-secondary uppercase">Border Left</span>
+<span class="text-sm font-bold text-on-surface">3px Solid</span>
+</div>
+<div class="flex justify-between items-end border-b border-outline-variant border-opacity-20 pb-2">
+<span class="text-[10px] font-semibold text-secondary uppercase">Corner Radius</span>
+<span class="text-sm font-bold text-on-surface">Full (Pill)</span>
+</div>
+</div>
+<div class="mt-auto">
+<div class="bg-surface-container-highest p-4 rounded-lg">
+<div class="flex items-center gap-3 mb-2">
+<span class="material-symbols-outlined text-primary">info</span>
+<span class="text-xs font-bold uppercase tracking-tight">Design Logic</span>
+</div>
+<p class="text-[11px] leading-relaxed text-on-surface-variant">Verdict states use a 15% opacity tint of their functional color for background fill to maintain legibility while ensuring semantic color meaning remains dominant.</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Usage Context: Vehicle Detail Card -->
+<section class="space-y-6">
+<h2 class="text-xl font-bold tracking-tight text-on-surface">Live Context Implementation</h2>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+<!-- Vehicle Card 1 -->
+<div class="bg-white rounded-xl shadow-sm border border-outline-variant border-opacity-20 overflow-hidden flex hover:shadow-md transition-shadow cursor-pointer group">
+<div class="w-1/3 relative">
+<img alt="Vehicle" class="w-full h-full object-cover" data-alt="side profile of a sleek charcoal grey modern sedan parked in a high-tech concrete showroom with dramatic lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBEatfPF36vr4GuSugP3FKHHh7bijF8EUrvvEEMbeBEV_Sexs4oAaFyLME0aRgmptrBoEGnqXqyunZppVBw6UGyRKlJG-JMjSWh45ywWvYVVAUz4bX7_HMqNJO1FNjdSSpd1M09heUCACfwiJZr3QAp532YnzEsVws_Q6IJ5x81ztznk9eIO7x1xA5qf4LVihvUhb9vxe2eHqJJXanG6TkioV3tYR5xpG1RN4MQu0rqK3JMz0zKWvGmdrnrfQeilTdrQnq0VaFmatY"/>
+<div class="absolute inset-0 bg-primary/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+</div>
+<div class="w-2/3 p-5 flex flex-col">
+<div class="flex justify-between items-start mb-1">
+<h3 class="font-bold text-lg tracking-tight">2022 Audi A4 S-Line</h3>
+<span class="text-xs font-bold text-primary">£24,950</span>
+</div>
+<p class="text-xs text-secondary mb-4 uppercase tracking-widest">VIN: WAUZZZ8K0DA002... <span class="material-symbols-outlined text-[10px]">content_copy</span></p>
+<div class="mt-auto flex gap-2">
+<div class="verdict-badge bg-green-50 text-green-800 border-green-600">
+<span class="material-symbols-outlined text-sm mr-1.5">check</span>
+                                        Clean history
+                                    </div>
+<div class="verdict-badge bg-[#fffcf0] text-tertiary border-[#d4a017]">
+<span class="material-symbols-outlined text-sm mr-1.5">history_edu</span>
+                                        MOT 11m
+                                    </div>
+</div>
+</div>
+</div>
+<!-- Vehicle Card 2 -->
+<div class="bg-white rounded-xl shadow-sm border border-outline-variant border-opacity-20 overflow-hidden flex hover:shadow-md transition-shadow cursor-pointer group">
+<div class="w-1/3 relative">
+<img alt="Vehicle" class="w-full h-full object-cover" data-alt="front quarter view of a deep red luxury SUV parked on an asphalt road during blue hour with glowing headlights" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDd8NfVy4zW_ybvY_ZF7oQCwoezkLg6E2UhTxwQzRpc0Zy6rIoeJMGpFLB6M_M7j1bUJlNRSTMk8k6Ofih6rkKC-weSq75CKTZlLxPZLoeB7nYyriVrXTjQ598gbevQ5rPhaLgYp44m8k10LwhAuU-eTERy-tE-TSph1nDxeBGy4KzZgyCCFAkwSvagTymc87-NV-1GAVo8Pm_LweAFhQpFrnmdytYnW2M3_lGAqjJnT3QxJBTu6Lb3NK5C3TvBXlqEDREeOjs7aVs"/>
+<div class="absolute inset-0 bg-primary/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+</div>
+<div class="w-2/3 p-5 flex flex-col">
+<div class="flex justify-between items-start mb-1">
+<h3 class="font-bold text-lg tracking-tight">2019 Range Rover Sport</h3>
+<span class="text-xs font-bold text-primary">£42,200</span>
+</div>
+<p class="text-xs text-secondary mb-4 uppercase tracking-widest">VIN: SALWA2EF7KA911... <span class="material-symbols-outlined text-[10px]">content_copy</span></p>
+<div class="mt-auto flex gap-2">
+<div class="verdict-badge bg-error-container text-error border-error">
+<span class="material-symbols-outlined text-sm mr-1.5">close</span>
+                                        Mileage anomaly
+                                    </div>
+<div class="verdict-badge bg-[#fffcf0] text-tertiary border-[#d4a017]">
+<span class="material-symbols-outlined text-sm mr-1.5">warning</span>
+                                        3 advisories
+                                    </div>
+</div>
+</div>
+</div>
+</div>
+</section>
+</div>
+</div>
+<!-- SideNavBar -->
+<aside class="hidden lg:flex flex-col h-full w-80 fixed right-0 border-l border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 py-6 font-inter uppercase tracking-widest text-[10px] font-semibold transition-all duration-150 ease-in-out">
+<div class="px-6 mb-10 flex flex-col items-center">
+<div class="w-24 h-24 rounded-lg bg-surface-container-highest flex items-center justify-center mb-4 border border-outline-variant p-2 overflow-hidden shadow-sm">
+<img alt="Vehicle Profile" class="w-full h-full object-cover rounded-sm" data-alt="close-up of a high-resolution digital car dashboard screen showing diagnostic performance gauges in blue and white" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAytjicReYLv8OodlYkFuINxQWBsLGq7VHYfksh_4EArXMQ5MW4UKWmE92ksZvqoxuUfyTvQlVL-kcpC2K9CuyaUC41ZaBHblZuYGO44AC81zEBfUZ0oh8VP4JOGRf5s0ICmUNzq94rt_s1Y7bY8S8PeGg7LoBz4d3wrVLM4h_U6-Via2Ea1-tXSskNftJnt_umQ3-3-kWgmiwz5oZIY-i05p9B_urZ3KsLXxDGI2fsI43HxIviPPcTtN4qByre6iU5AzzGSHJTPcc"/>
+</div>
+<h2 class="text-lg font-black text-blue-900 dark:text-blue-100 text-center normal-case tracking-normal">Vehicle Diagnostics</h2>
+<p class="text-slate-500 font-medium lowercase tracking-normal">Precision Data Engine</p>
+</div>
+<nav class="flex-grow space-y-1">
+<a class="flex items-center gap-4 px-8 py-4 text-blue-900 dark:text-blue-100 font-bold border-r-4 border-blue-900 dark:border-blue-500 bg-slate-200 dark:bg-slate-800 transition-all duration-150 ease-in-out" href="#">
+<span class="material-symbols-outlined text-base">analytics</span>
+                    Diagnostics
+                </a>
+<a class="flex items-center gap-4 px-8 py-4 text-slate-500 dark:text-slate-400 hover:text-blue-700 hover:bg-slate-100 dark:hover:bg-slate-900 transition-all duration-150 ease-in-out" href="#">
+<span class="material-symbols-outlined text-base">history_edu</span>
+                    MOT History
+                </a>
+<a class="flex items-center gap-4 px-8 py-4 text-slate-500 dark:text-slate-400 hover:text-blue-700 hover:bg-slate-100 dark:hover:bg-slate-900 transition-all duration-150 ease-in-out" href="#">
+<span class="material-symbols-outlined text-base">payments</span>
+                    Tax Status
+                </a>
+<a class="flex items-center gap-4 px-8 py-4 text-slate-500 dark:text-slate-400 hover:text-blue-700 hover:bg-slate-100 dark:hover:bg-slate-900 transition-all duration-150 ease-in-out" href="#">
+<span class="material-symbols-outlined text-base" style="font-variation-settings: 'FILL' 1;">payments</span>
+                    Market Value
+                </a>
+</nav>
+<div class="px-6 py-6 border-t border-slate-200 dark:border-slate-800 space-y-4">
+<button class="w-full bg-primary text-on-primary py-3 rounded text-[11px] font-bold tracking-widest uppercase hover:bg-primary-container transition-colors shadow-lg">
+                    Full HPI Check
+                </button>
+<div class="flex flex-col gap-1">
+<a class="flex items-center gap-2 text-slate-400 hover:text-primary transition-colors py-2" href="#">
+<span class="material-symbols-outlined text-base">help_outline</span>
+                        Support
+                    </a>
+<a class="flex items-center gap-2 text-slate-400 hover:text-primary transition-colors py-2" href="#">
+<span class="material-symbols-outlined text-base">person</span>
+                        Account
+                    </a>
+</div>
+</div>
+</aside>
+</main>
+</body></html>

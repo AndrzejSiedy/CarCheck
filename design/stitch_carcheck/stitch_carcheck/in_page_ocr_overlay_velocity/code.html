@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>CarCheck - Precision OCR Scanner</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-container-lowest": "#ffffff",
+                    "on-tertiary": "#ffffff",
+                    "secondary-container": "#d5e3fc",
+                    "tertiary-fixed-dim": "#ffb59a",
+                    "secondary-fixed": "#d5e3fc",
+                    "on-surface-variant": "#434653",
+                    "on-secondary": "#ffffff",
+                    "on-background": "#191c1e",
+                    "on-primary-fixed": "#001946",
+                    "on-primary-fixed-variant": "#00419e",
+                    "on-error-container": "#93000a",
+                    "error-container": "#ffdad6",
+                    "error": "#ba1a1a",
+                    "on-secondary-fixed": "#0d1c2e",
+                    "surface-variant": "#e0e3e5",
+                    "tertiary-fixed": "#ffdbcf",
+                    "surface-dim": "#d8dadc",
+                    "surface-tint": "#2559bd",
+                    "on-primary": "#ffffff",
+                    "surface-container-highest": "#e0e3e5",
+                    "surface-container-high": "#e6e8ea",
+                    "primary-fixed": "#dae2ff",
+                    "on-error": "#ffffff",
+                    "on-primary-container": "#a5bdff",
+                    "secondary": "#515f74",
+                    "outline": "#737784",
+                    "surface-container": "#eceef0",
+                    "primary-fixed-dim": "#b1c5ff",
+                    "on-tertiary-container": "#ffaa8a",
+                    "surface-bright": "#f7f9fb",
+                    "tertiary-container": "#8b2e01",
+                    "tertiary": "#651f00",
+                    "secondary-fixed-dim": "#b9c7df",
+                    "on-tertiary-fixed": "#380d00",
+                    "primary-container": "#0047ab",
+                    "outline-variant": "#c3c6d5",
+                    "on-secondary-fixed-variant": "#3a485b",
+                    "background": "#f7f9fb",
+                    "inverse-primary": "#b1c5ff",
+                    "primary": "#00327d",
+                    "inverse-surface": "#2d3133",
+                    "on-secondary-container": "#57657a",
+                    "surface-container-low": "#f2f4f6",
+                    "on-surface": "#191c1e",
+                    "inverse-on-surface": "#eff1f3",
+                    "surface": "#f7f9fb",
+                    "on-tertiary-fixed-variant": "#802900"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "fontFamily": {
+                    "headline": ["Inter"],
+                    "body": ["Inter"],
+                    "label": ["Inter"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .scan-line {
+            background: linear-gradient(to bottom, transparent, #00327d, transparent);
+            height: 2px;
+            width: 100%;
+            position: absolute;
+            top: 50%;
+            left: 0;
+            opacity: 0.5;
+        }
+    </style>
+</head>
+<body class="bg-surface font-body overflow-hidden">
+<!-- Main Navigation (TopNavBar Shell) -->
+<header class="bg-white dark:bg-slate-900 text-blue-900 dark:text-blue-400 font-inter tracking-tight flex justify-between items-center px-4 py-3 w-full relative z-50">
+<div class="flex items-center gap-8">
+<span class="text-xl font-bold tracking-tighter text-blue-900 dark:text-blue-200">CarCheck</span>
+<nav class="hidden md:flex gap-6">
+<a class="text-blue-700 dark:text-blue-300 border-b-2 border-blue-700 text-sm font-semibold h-full py-1" href="#">Diagnostics</a>
+<a class="text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors text-sm font-semibold h-full py-1" href="#">History</a>
+<a class="text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors text-sm font-semibold h-full py-1" href="#">Market</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<div class="hidden md:flex items-center bg-slate-100 dark:bg-slate-800 rounded px-3 py-1.5 gap-2">
+<span class="material-symbols-outlined text-sm" data-icon="search">search</span>
+<input class="bg-transparent border-none text-xs focus:ring-0 w-32" placeholder="Search vehicle..." type="text"/>
+</div>
+<button class="material-symbols-outlined text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800 p-2 rounded transition-colors" data-icon="history">history</button>
+<button class="material-symbols-outlined text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800 p-2 rounded transition-colors" data-icon="settings">settings</button>
+<img alt="User Avatar" class="w-8 h-8 rounded-full border border-outline-variant" data-alt="Professional user avatar in clean attire against a neutral architectural background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCwxWS4wem_oEn1e6b6o3Cd-50M2CcyN4oX0paHj-9mHtCCci0NWTN7ZyrWqfJH6s7MiAAmJO3wvPIQTIhlNWjfdLRMWSc7rT7gZdSN8fwkypPe7aks2PY2aa3BfDOd96jf4B8PXNsO49NrB00VHP0VkqWacNWb4ETAX8q5ZqfLvjh_VMioAtEKmJKYHtgLhYDfyyRugrebqZN7GTUkglAHBx4px7g-jyeb4yqwebLhGmd0MjFG8vjJxE7Yox_4vrDc1ZX_LbhNJzU"/>
+</div>
+</header>
+<main class="relative h-[calc(100vh-56px)] w-full overflow-hidden bg-on-background">
+<!-- Background Layer: The blurred car image -->
+<div class="absolute inset-0 z-0">
+<img class="w-full h-full object-cover blur-sm opacity-60" data-alt="Modern high-performance sports car parked in a minimalist showroom with cold blue lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBxymGDvEj-xGJrSlpoqWDgdTWjQYEI6-nryEVoA76nCdEazqPvx53NgCVeaORe6jvVn18FIGuZ3S2b66RiZLBNZwWzpsVjwUb2F0wNq9z7vjfGyWsqw9PQk1QLkVVAKNED6Xg3mXqW-943xQZzk26BRygCV2uZFegzFV7JyJr7-jlBNPO9RK0B1YtVRGbpfYxGdsapnCGpKI3h6tflP1s3lJWlS4yaS8Z4DlKDv0hHpCu339KydLW_DLICLTH_hOSUjT43kLJWrBU"/>
+</div>
+<!-- OCR Overlay Layer -->
+<div class="absolute inset-0 z-10 bg-on-background/40 backdrop-blur-none flex items-center justify-center cursor-crosshair">
+<!-- Draggable Selection Area -->
+<div class="relative w-[480px] h-[160px] border-2 border-dashed border-primary ring-[4000px] ring-on-background/70">
+<!-- Corner Handles (Industrial Aesthetic) -->
+<div class="absolute -top-1.5 -left-1.5 w-3 h-3 bg-primary"></div>
+<div class="absolute -top-1.5 -right-1.5 w-3 h-3 bg-primary"></div>
+<div class="absolute -bottom-1.5 -left-1.5 w-3 h-3 bg-primary"></div>
+<div class="absolute -bottom-1.5 -right-1.5 w-3 h-3 bg-primary"></div>
+<!-- Technical Scan Line -->
+<div class="scan-line"></div>
+<!-- Tooltip Anchor -->
+<div class="absolute -top-14 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2">
+<div class="bg-primary text-on-primary px-4 py-2 rounded-lg shadow-xl flex items-center gap-3">
+<span class="material-symbols-outlined text-sm" data-icon="drag_pan">drag_pan</span>
+<span class="font-inter text-[11px] font-semibold uppercase tracking-widest whitespace-nowrap">Drag over the number plate</span>
+</div>
+<div class="w-0 h-0 border-l-[8px] border-l-transparent border-r-[8px] border-r-transparent border-t-[8px] border-t-primary"></div>
+</div>
+<!-- Reading Indicator -->
+<div class="absolute inset-0 flex items-center justify-center">
+<div class="flex items-center gap-4 px-6 py-3">
+<div class="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>
+<div class="flex flex-col">
+<span class="font-inter text-[10px] font-bold uppercase tracking-widest text-primary-container">Status</span>
+<span class="font-inter text-sm font-black text-on-primary uppercase tracking-tight">Processing - Reading plate...</span>
+</div>
+</div>
+</div>
+<!-- High-Tech Metadata Overlays -->
+<div class="absolute -bottom-10 left-0 flex gap-4">
+<div class="flex flex-col">
+<span class="font-inter text-[9px] font-bold uppercase tracking-widest text-white/50">COORDS</span>
+<span class="font-inter text-[11px] font-medium text-white/90">X: 582.04 Y: 112.98</span>
+</div>
+<div class="flex flex-col border-l border-white/20 pl-4">
+<span class="font-inter text-[9px] font-bold uppercase tracking-widest text-white/50">PRECISION</span>
+<span class="font-inter text-[11px] font-medium text-white/90">0.998 RMS</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Diagnostic SideNav (Blueprint-style) -->
+<aside class="hidden md:flex h-full w-80 fixed right-0 top-[56px] border-l border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 flex-col py-6 z-20 shadow-2xl dark:shadow-none transition-all duration-150 ease-in-out">
+<div class="px-6 mb-8">
+<div class="flex items-center gap-4 mb-4">
+<div class="w-12 h-12 bg-surface-container-highest rounded-lg flex items-center justify-center">
+<span class="material-symbols-outlined text-primary text-2xl" data-icon="analytics">analytics</span>
+</div>
+<div>
+<h2 class="text-lg font-black text-blue-900 dark:text-blue-100">Vehicle Diagnostics</h2>
+<p class="text-[10px] font-semibold text-slate-500 uppercase tracking-widest">Precision Data Engine</p>
+</div>
+</div>
+<button class="w-full bg-primary text-on-primary py-3 rounded text-[11px] font-bold uppercase tracking-[0.2em] shadow-lg hover:bg-primary-container transition-colors">
+                    Full HPI Check
+                </button>
+</div>
+<nav class="flex-1 space-y-1">
+<div class="flex items-center px-6 py-4 bg-slate-200 dark:bg-slate-800 text-blue-900 dark:text-blue-100 font-bold border-r-4 border-blue-900 dark:border-blue-500 cursor-pointer">
+<span class="material-symbols-outlined mr-4" data-icon="analytics">analytics</span>
+<span class="font-inter uppercase tracking-widest text-[10px] font-semibold">Diagnostics</span>
+</div>
+<div class="flex items-center px-6 py-4 text-slate-500 dark:text-slate-400 hover:text-blue-700 hover:bg-slate-100 dark:hover:bg-slate-900 cursor-pointer">
+<span class="material-symbols-outlined mr-4" data-icon="history_edu">history_edu</span>
+<span class="font-inter uppercase tracking-widest text-[10px] font-semibold">MOT History</span>
+</div>
+<div class="flex items-center px-6 py-4 text-slate-500 dark:text-slate-400 hover:text-blue-700 hover:bg-slate-100 dark:hover:bg-slate-900 cursor-pointer">
+<span class="material-symbols-outlined mr-4" data-icon="payments">payments</span>
+<span class="font-inter uppercase tracking-widest text-[10px] font-semibold">Tax Status</span>
+</div>
+<div class="flex items-center px-6 py-4 text-slate-500 dark:text-slate-400 hover:text-blue-700 hover:bg-slate-100 dark:hover:bg-slate-900 cursor-pointer">
+<span class="material-symbols-outlined mr-4" data-icon="payments">payments</span>
+<span class="font-inter uppercase tracking-widest text-[10px] font-semibold">Market Value</span>
+</div>
+</nav>
+<div class="px-6 pt-6 border-t border-slate-200 dark:border-slate-800 mt-auto">
+<div class="flex items-center gap-4 text-slate-500 dark:text-slate-400 hover:text-blue-700 py-2 cursor-pointer transition-colors">
+<span class="material-symbols-outlined" data-icon="help_outline">help_outline</span>
+<span class="font-inter uppercase tracking-widest text-[10px] font-semibold">Support</span>
+</div>
+<div class="flex items-center gap-4 text-slate-500 dark:text-slate-400 hover:text-blue-700 py-2 cursor-pointer transition-colors">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="font-inter uppercase tracking-widest text-[10px] font-semibold">Account</span>
+</div>
+</div>
+</aside>
+<!-- Dynamic Control Bar (Lower Third) -->
+<div class="absolute bottom-12 left-12 z-30 flex items-center gap-6 bg-surface-container-low/90 backdrop-blur-md px-8 py-6 rounded shadow-2xl border-l-4 border-primary">
+<div class="flex flex-col gap-1">
+<span class="font-inter text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Scanner Engine</span>
+<div class="flex items-center gap-3">
+<span class="text-2xl font-bold text-blue-900">V3.4-PRO</span>
+<span class="bg-on-secondary-container text-white px-2 py-0.5 rounded text-[9px] font-bold">READY</span>
+</div>
+</div>
+<div class="h-10 w-px bg-slate-300"></div>
+<div class="grid grid-cols-2 gap-x-8 gap-y-1">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[14px] text-primary" data-icon="check_circle" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="font-inter text-[11px] font-semibold text-slate-700">Auto-Focus</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[14px] text-primary" data-icon="check_circle" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="font-inter text-[11px] font-semibold text-slate-700">Contrast++</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[14px] text-primary" data-icon="check_circle" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="font-inter text-[11px] font-semibold text-slate-700">Noise Filter</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[14px] text-slate-300" data-icon="radio_button_unchecked">radio_button_unchecked</span>
+<span class="font-inter text-[11px] font-semibold text-slate-400">Night Vision</span>
+</div>
+</div>
+</div>
+<!-- Visual Calibration Markers -->
+<div class="absolute top-12 left-12 w-16 h-16 border-t border-l border-white/30 z-20"></div>
+<div class="absolute top-12 right-96 w-16 h-16 border-t border-r border-white/30 z-20 hidden md:block"></div>
+<div class="absolute bottom-12 right-96 w-16 h-16 border-b border-r border-white/30 z-20 hidden md:block"></div>
+<div class="absolute bottom-12 left-12 w-16 h-16 border-b border-l border-white/30 z-20"></div>
+</main>
+<!-- Bottom Navigation (Mobile Only) -->
+<div class="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 flex justify-around py-3 z-50">
+<button class="flex flex-col items-center gap-1 text-primary">
+<span class="material-symbols-outlined" data-icon="analytics" style="font-variation-settings: 'FILL' 1;">analytics</span>
+<span class="text-[9px] font-bold uppercase">Scan</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-slate-400">
+<span class="material-symbols-outlined" data-icon="history">history</span>
+<span class="text-[9px] font-bold uppercase">History</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-slate-400">
+<span class="material-symbols-outlined" data-icon="payments">payments</span>
+<span class="text-[9px] font-bold uppercase">Market</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-slate-400">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="text-[9px] font-bold uppercase">Profile</span>
+</button>
+</div>
+</body></html>

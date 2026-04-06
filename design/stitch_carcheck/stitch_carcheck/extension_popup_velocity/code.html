@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container-lowest": "#ffffff",
+                        "on-tertiary": "#ffffff",
+                        "secondary-container": "#d5e3fc",
+                        "tertiary-fixed-dim": "#ffb59a",
+                        "secondary-fixed": "#d5e3fc",
+                        "on-surface-variant": "#434653",
+                        "on-secondary": "#ffffff",
+                        "on-background": "#191c1e",
+                        "on-primary-fixed": "#001946",
+                        "on-primary-fixed-variant": "#00419e",
+                        "on-error-container": "#93000a",
+                        "error-container": "#ffdad6",
+                        "error": "#ba1a1a",
+                        "on-secondary-fixed": "#0d1c2e",
+                        "surface-variant": "#e0e3e5",
+                        "tertiary-fixed": "#ffdbcf",
+                        "surface-dim": "#d8dadc",
+                        "surface-tint": "#2559bd",
+                        "on-primary": "#ffffff",
+                        "surface-container-highest": "#e0e3e5",
+                        "surface-container-high": "#e6e8ea",
+                        "primary-fixed": "#dae2ff",
+                        "on-error": "#ffffff",
+                        "on-primary-container": "#a5bdff",
+                        "secondary": "#515f74",
+                        "outline": "#737784",
+                        "surface-container": "#eceef0",
+                        "primary-fixed-dim": "#b1c5ff",
+                        "on-tertiary-container": "#ffaa8a",
+                        "surface-bright": "#f7f9fb",
+                        "tertiary-container": "#8b2e01",
+                        "tertiary": "#651f00",
+                        "secondary-fixed-dim": "#b9c7df",
+                        "on-tertiary-fixed": "#380d00",
+                        "primary-container": "#0047ab",
+                        "outline-variant": "#c3c6d5",
+                        "on-secondary-fixed-variant": "#3a485b",
+                        "background": "#f7f9fb",
+                        "inverse-primary": "#b1c5ff",
+                        "primary": "#00327d",
+                        "inverse-surface": "#2d3133",
+                        "on-secondary-container": "#57657a",
+                        "surface-container-low": "#f2f4f6",
+                        "on-surface": "#191c1e",
+                        "inverse-on-surface": "#eff1f3",
+                        "surface": "#f7f9fb",
+                        "on-tertiary-fixed-variant": "#802900"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "fontFamily": {
+                        "headline": ["Inter"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #c3c6d5;
+            border-radius: 2px;
+        }
+    </style>
+</head>
+<body class="bg-white antialiased flex justify-center items-center min-h-screen">
+<!-- Extension Popup Container (Fixed 360x500px) -->
+<div class="w-[360px] h-[500px] bg-surface flex flex-col overflow-hidden relative shadow-2xl border border-outline-variant/20">
+<!-- TopAppBar (Shared Component) -->
+<nav class="bg-white dark:bg-slate-900 text-blue-900 dark:text-blue-400 font-inter tracking-tight w-full border-b-0 flex justify-between items-center px-4 py-3 w-full">
+<div class="flex items-center gap-2">
+<span class="text-xl font-bold tracking-tighter text-blue-900 dark:text-blue-200">CarCheck</span>
+</div>
+<div class="flex items-center gap-3">
+<button class="hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors p-1 rounded">
+<span class="material-symbols-outlined text-[20px]" data-icon="history">history</span>
+</button>
+<button class="hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors p-1 rounded">
+<span class="material-symbols-outlined text-[20px]" data-icon="settings">settings</span>
+</button>
+<div class="w-7 h-7 rounded-full bg-surface-container-highest overflow-hidden">
+<img alt="User Avatar" class="w-full h-full object-cover" data-alt="professional male portrait with neutral background and clean lighting, minimalist corporate headshot style" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBTFaMoQLyMy4913XncX3pYqkn3NbQT6191GezEl9dRtpA08LICzvmQx9cO2RC55yE7OyQWAeVLQ6CiwcEJfCdlNps14Ek1Dm1aXfBJEhuqGQpSzJuX9tnjpVHISKpv25_Id-cgCwvtUcr-WUlaXOjl9Y8uSnUtim4CCR9Bks71Bfmj3ZmQydCBWdGWVudOGuch67g78CZ4EQbg3xY4BeDP_0TMUWbe_iI4pH09T1vHpLSkNzbSsIhoU11s_RLGYzq9UonjEPADUcs"/>
+</div>
+</div>
+</nav>
+<!-- Sub-header/Filter Strip -->
+<div class="px-4 py-2 bg-surface-container-low flex justify-between items-center">
+<span class="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">Saved Vehicles (4)</span>
+<button class="text-primary text-[11px] font-bold tracking-tight hover:underline">Clear All</button>
+</div>
+<!-- Content Area (Scrollable) -->
+<main class="flex-1 overflow-y-auto custom-scrollbar px-3 py-3 space-y-3">
+<!-- BMW M2 Card -->
+<div class="bg-surface-container-lowest p-3 rounded shadow-sm flex flex-col gap-2 hover:bg-surface-container-high transition-colors group">
+<div class="flex justify-between items-start">
+<div class="flex flex-col">
+<h3 class="text-on-surface font-extrabold tracking-tight text-sm">BMW M2</h3>
+<div class="flex items-center gap-2 mt-0.5">
+<span class="text-[10px] font-medium text-on-secondary-container bg-secondary-container px-1.5 py-0.5 rounded">AutoTrader</span>
+<span class="text-[10px] text-outline">2m ago</span>
+</div>
+</div>
+<div class="flex flex-col items-end">
+<span class="text-[10px] font-black text-white bg-green-600 px-2 py-0.5 rounded-sm">PASS</span>
+<span class="text-xs font-bold text-on-surface mt-1">24,103 mi</span>
+</div>
+</div>
+</div>
+<!-- Audi RS6 Card -->
+<div class="bg-surface-container-lowest p-3 rounded shadow-sm flex flex-col gap-2 hover:bg-surface-container-high transition-colors group">
+<div class="flex justify-between items-start">
+<div class="flex flex-col">
+<h3 class="text-on-surface font-extrabold tracking-tight text-sm">Audi RS6 Avant</h3>
+<div class="flex items-center gap-2 mt-0.5">
+<span class="text-[10px] font-medium text-on-secondary-container bg-secondary-container px-1.5 py-0.5 rounded">eBay</span>
+<span class="text-[10px] text-outline">15m ago</span>
+</div>
+</div>
+<div class="flex flex-col items-end">
+<span class="text-[10px] font-black text-white bg-amber-500 px-2 py-0.5 rounded-sm">ADVISORY</span>
+<span class="text-xs font-bold text-on-surface mt-1">42,890 mi</span>
+</div>
+</div>
+</div>
+<!-- Porsche Cayman Card -->
+<div class="bg-surface-container-lowest p-3 rounded shadow-sm flex flex-col gap-2 hover:bg-surface-container-high transition-colors group">
+<div class="flex justify-between items-start">
+<div class="flex flex-col">
+<h3 class="text-on-surface font-extrabold tracking-tight text-sm">Porsche 718 Cayman</h3>
+<div class="flex items-center gap-2 mt-0.5">
+<span class="text-[10px] font-medium text-on-secondary-container bg-secondary-container px-1.5 py-0.5 rounded">AutoTrader</span>
+<span class="text-[10px] text-outline">1h ago</span>
+</div>
+</div>
+<div class="flex flex-col items-end">
+<span class="text-[10px] font-black text-white bg-green-600 px-2 py-0.5 rounded-sm">PASS</span>
+<span class="text-xs font-bold text-on-surface mt-1">12,400 mi</span>
+</div>
+</div>
+</div>
+<!-- VW Golf R Card -->
+<div class="bg-surface-container-lowest p-3 rounded shadow-sm flex flex-col gap-2 hover:bg-surface-container-high transition-colors group">
+<div class="flex justify-between items-start">
+<div class="flex flex-col">
+<h3 class="text-on-surface font-extrabold tracking-tight text-sm">VW Golf R (Mk8)</h3>
+<div class="flex items-center gap-2 mt-0.5">
+<span class="text-[10px] font-medium text-on-secondary-container bg-secondary-container px-1.5 py-0.5 rounded">PistonHeads</span>
+<span class="text-[10px] text-outline">3h ago</span>
+</div>
+</div>
+<div class="flex flex-col items-end">
+<span class="text-[10px] font-black text-white bg-error px-2 py-0.5 rounded-sm">CRITICAL</span>
+<span class="text-xs font-bold text-on-surface mt-1">31,022 mi</span>
+</div>
+</div>
+</div>
+<!-- Performance Metric Bar (Diagnostic Instrument) -->
+<div class="mt-4 p-4 bg-primary rounded shadow-lg">
+<div class="flex justify-between items-center mb-2">
+<span class="text-[10px] uppercase font-bold text-primary-fixed tracking-widest">Market Value Index</span>
+<span class="text-xs font-bold text-white">£45,250 Avg</span>
+</div>
+<div class="h-1.5 w-full bg-primary-container rounded-full overflow-hidden">
+<div class="h-full bg-primary-fixed-dim w-[72%]"></div>
+</div>
+<div class="flex justify-between mt-1 text-[9px] text-primary-fixed opacity-70 font-semibold uppercase">
+<span>Below</span>
+<span>Fair</span>
+<span>Premium</span>
+</div>
+</div>
+</main>
+<!-- Footer Actions -->
+<footer class="p-4 bg-white border-t border-surface-variant flex gap-3">
+<button class="flex-1 bg-surface-container-highest text-primary font-bold text-xs py-2.5 rounded hover:bg-surface-variant transition-all uppercase tracking-tighter">
+                Compare (2)
+            </button>
+<button class="flex-1 bg-primary text-white font-bold text-xs py-2.5 rounded hover:opacity-90 transition-all uppercase tracking-tighter">
+                Full HPI Check
+            </button>
+</footer>
+<!-- Tonal Accent Line -->
+<div class="h-1 w-full bg-primary"></div>
+</div>
+</body></html>
