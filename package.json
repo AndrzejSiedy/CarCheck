@@ -1,0 +1,6 @@
+{
+  "name": "carcheck-extension",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Chrome extension for instant MOT insights on UK car listing pages"
+}

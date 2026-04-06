@@ -1,0 +1,41 @@
+{
+  "manifest_version": 3,
+  "name": "CarCheck",
+  "version": "0.1.0",
+  "description": "Instant MOT insights for UK car buyers",
+  "permissions": ["activeTab", "storage"],
+  "host_permissions": [
+    "https://www.autotrader.co.uk/car-details/*",
+    "https://www.ebay.co.uk/itm/*",
+    "https://www.gumtree.com/cars/*",
+    "https://www.facebook.com/marketplace/*"
+  ],
+  "action": {
+    "default_popup": "popup/popup.html",
+    "default_icon": {
+      "16": "icons/icon-16.png",
+      "48": "icons/icon-48.png",
+      "128": "icons/icon-128.png"
+    }
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://www.autotrader.co.uk/car-details/*",
+        "https://www.ebay.co.uk/itm/*",
+        "https://www.gumtree.com/cars/*",
+        "https://www.facebook.com/marketplace/*"
+      ],
+      "js": ["content/content.js"],
+      "css": ["content/content.css"]
+    }
+  ],
+  "background": {
+    "service_worker": "background/background.js"
+  },
+  "icons": {
+    "16": "icons/icon-16.png",
+    "48": "icons/icon-48.png",
+    "128": "icons/icon-128.png"
+  }
+}
