@@ -39,24 +39,24 @@ const BAR_STYLES = `
     background: #00327d;
     color: #fff;
     font-family: Inter, system-ui, sans-serif;
-    font-size: 13px;
+    font-size: 15px;
     display: flex;
     align-items: center;
-    gap: 8px;
-    padding: 6px 12px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    gap: 12px;
+    padding: 10px 16px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.25);
   }
-  #cc-bar label { font-weight: 600; letter-spacing: 0.02em; white-space: nowrap; }
+  #cc-bar label { font-weight: 700; font-size: 15px; letter-spacing: 0.03em; white-space: nowrap; }
   #cc-input {
     background: #fff;
     border: none;
     border-radius: 2px;
-    padding: 4px 8px;
-    font-size: 13px;
+    padding: 7px 12px;
+    font-size: 15px;
     font-family: inherit;
     text-transform: uppercase;
-    letter-spacing: 0.08em;
-    width: 110px;
+    letter-spacing: 0.1em;
+    width: 140px;
     outline: none;
   }
   #cc-btn {
@@ -64,14 +64,14 @@ const BAR_STYLES = `
     color: #00327d;
     border: none;
     border-radius: 2px;
-    padding: 4px 10px;
-    font-size: 12px;
+    padding: 7px 16px;
+    font-size: 14px;
     font-weight: 700;
     cursor: pointer;
     letter-spacing: 0.04em;
   }
   #cc-btn:hover { background: #e0e3e5; }
-  #cc-status { flex: 1; font-size: 12px; opacity: 0.9; }
+  #cc-status { flex: 1; font-size: 14px; opacity: 0.9; }
   #cc-badge {
     display: none;
     align-items: center;

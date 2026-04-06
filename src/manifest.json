@@ -5,9 +5,9 @@
   "description": "Instant MOT insights for UK car buyers",
   "permissions": ["activeTab", "storage"],
   "host_permissions": [
-    "https://www.autotrader.co.uk/car-details/*",
-    "https://www.ebay.co.uk/itm/*",
-    "https://www.gumtree.com/cars/*",
+    "https://www.autotrader.co.uk/*",
+    "https://www.ebay.co.uk/*",
+    "https://www.gumtree.com/*",
     "https://www.facebook.com/marketplace/*"
   ],
   "action": {
@@ -16,9 +16,9 @@
   "content_scripts": [
     {
       "matches": [
-        "https://www.autotrader.co.uk/car-details/*",
-        "https://www.ebay.co.uk/itm/*",
-        "https://www.gumtree.com/cars/*",
+        "https://www.autotrader.co.uk/*",
+        "https://www.ebay.co.uk/*",
+        "https://www.gumtree.com/*",
         "https://www.facebook.com/marketplace/*"
       ],
       "js": ["content/content.js"],
