@@ -1,1 +1,47 @@
-/* Popup styles — see /docs/ui-design-brief.md */
+/* Popup styles — Phase 0 placeholder. Full design in /docs/ui-design-brief.md */
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  width: 280px;
+  font-family: Inter, system-ui, sans-serif;
+  font-size: 13px;
+  color: #191c1e;
+  background: #f7f9fb;
+}
+
+.header {
+  background: #00327d;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+}
+
+.logo { font-weight: 700; font-size: 14px; letter-spacing: 0.04em; }
+
+.phase {
+  font-size: 10px;
+  opacity: 0.6;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.body { padding: 16px 14px; }
+
+.body p { color: #434653; line-height: 1.5; margin-bottom: 16px; }
+
+.usage {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #eceef0;
+  border-radius: 4px;
+  padding: 8px 10px;
+}
+
+.usage-label { flex: 1; color: #434653; }
+.usage-count { font-weight: 700; color: #00327d; font-size: 15px; }
+.usage-limit { color: #434653; }

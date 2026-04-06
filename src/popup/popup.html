@@ -7,8 +7,18 @@
     <link rel="stylesheet" href="popup.css" />
   </head>
   <body>
-    <!-- Popup shell — scan history, shortlist, settings, upgrade prompt -->
-    <!-- See /docs/ui-design-brief.md for design spec -->
+    <div class="header">
+      <span class="logo">CarCheck</span>
+      <span class="phase">Phase 0</span>
+    </div>
+    <div class="body">
+      <p>Open an AutoTrader listing to check a plate.</p>
+      <div class="usage">
+        <span class="usage-label">Free checks used</span>
+        <span class="usage-count" id="usage">—</span>
+        <span class="usage-limit">/ 3</span>
+      </div>
+    </div>
     <script src="popup.js"></script>
   </body>
 </html>
