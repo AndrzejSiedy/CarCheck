@@ -2,9 +2,9 @@
 // Run: npm run dev (starts esbuild watch + Chrome together)
 
 module.exports = {
+  sourceDir: './dist',
   run: {
     target: ['chromium'],
-    sourceDir: './dist',
     startUrl: [
       'https://www.autotrader.co.uk',
       'chrome://extensions',
