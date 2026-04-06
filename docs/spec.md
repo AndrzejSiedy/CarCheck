@@ -26,13 +26,15 @@ Five designed screens define the full UX surface:
 
 ## Scoring engine (deterministic)
 
-Five core rules applied in order:
+Five rules applied in order. Starting score: 0.
 
-1. **Latest test result** — pass adds base score, fail removes heavily
-2. **Advisory count** — age-weighted thresholds (more advisories on newer car = worse)
-3. **Mileage anomaly** — rollback detection via year-on-year delta
-4. **MOT frequency gaps** — missed annual tests = risk signal
-5. **Clean history bonus** — consecutive pass streak adds reliability bonus
+| # | Rule | Points |
+| --- | --- | --- |
+| 1 | **Latest test result** | PASS: +60 base. FAIL: −40 base. |
+| 2 | **Advisory count (age-weighted)** | Car < 3 yrs: −8 per advisory. 3–6 yrs: −5. > 6 yrs: −3. Cap: −30 total. |
+| 3 | **Mileage rollback** | Year-on-year drop or > 10% fall: −25. Suspicious low mileage (< 1000 mi/yr, non-classic): −10. |
+| 4 | **MOT frequency gap** | Any gap > 13 months between tests: −10 per gap. Cap: −20 total. |
+| 5 | **Clean streak bonus** | 3 consecutive passes: +5. 5+: +10. 7+: +15. |
 
 Score bands:
 

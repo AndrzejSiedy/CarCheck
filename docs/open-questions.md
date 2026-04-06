@@ -4,8 +4,13 @@ Unresolved design items flagged during build. Review in Claude.ai sessions.
 
 ---
 
-- [ ] Final scoring weights — need real MOT data to calibrate
-- [ ] OCR accuracy threshold — what confidence level before falling back to manual entry?
-- [ ] Facebook Marketplace — content script injection may be blocked by CSP, needs testing
-- [ ] DVSA API OAuth2 flow — need to apply for API key and test token refresh
-- [ ] Shortlist data — chrome.storage.sync (limited to 100KB) or chrome.storage.local?
+## Open
+
+- [ ] Final scoring weights — calibrate against real MOT data once DVSA API access is confirmed
+- [ ] OCR accuracy threshold — what confidence level triggers fallback to manual VRM entry?
+- [ ] Facebook Marketplace — content script injection may be blocked by site CSP; needs live testing before committing Phase 0 to that match pattern
+
+## Resolved
+
+- [x] **DVSA API auth method** — confirmed `x-api-key` header (not OAuth2). See `dvsa-researcher` agent for full schema.
+- [x] **Shortlist storage** — `chrome.storage.local` chosen over `sync`. Reason: `sync` cap (100KB total / 8KB per item) is too small for scan history. See `decisions.md`.
