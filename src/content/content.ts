@@ -185,18 +185,33 @@ function inject(source: Source): void {
 
   // Alt+C — show OCR drag-select overlay
   document.addEventListener('keydown', (e: KeyboardEvent) => {
-    if (e.altKey && e.key === 'c') {
+    if (e.altKey && (e.key === 'c' || e.key === 'C' || e.code === 'KeyC')) {
       e.preventDefault();
-      showOCROverlay(
-        (vrm) => {
-          input.value = vrm;
-          submit();
-        },
-        () => { /* overlay cancelled — do nothing */ }
-      );
+      launchOCR();
     }
-  });
+  }, true); // capture phase — fires before site handlers can stop it
 }
+
+function launchOCR() {
+  const host = document.getElementById('carcheck-host');
+  if (!host) return;
+  const shadow = host.shadowRoot!;
+  const input = shadow.getElementById('cc-input') as HTMLInputElement;
+
+  showOCROverlay(
+    (vrm) => {
+      input.value = vrm;
+      input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+    },
+    () => { /* cancelled */ }
+  );
+}
+
+// ─── Chrome command listener (Alt+C registered in manifest) ──────────────────
+
+chrome.runtime.onMessage.addListener((message) => {
+  if (message.type === 'LAUNCH_OCR') launchOCR();
+});
 
 // ─── entry point ──────────────────────────────────────────────────────────────
 

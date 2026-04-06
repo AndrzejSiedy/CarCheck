@@ -91,8 +91,19 @@ async function handleCheckVrm(vrm: string, source: ScanResult['source']): Promis
   return { ok: true, result };
 }
 
+// ─── keyboard command relay ───────────────────────────────────────────────────
+
+chrome.commands.onCommand.addListener(async (command) => {
+  if (command === 'activate-ocr') {
+    const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+    if (tab?.id) chrome.tabs.sendMessage(tab.id, { type: 'LAUNCH_OCR' });
+  }
+});
+
+// ─── message handler ──────────────────────────────────────────────────────────
+
 chrome.runtime.onMessage.addListener(
-  (message: CheckVrmMessage | { type: 'CAPTURE_TAB' }, _sender, sendResponse) => {
+  (message: CheckVrmMessage | { type: 'CAPTURE_TAB' | 'LAUNCH_OCR' }, _sender, sendResponse) => {
     if (message.type === 'CHECK_VRM') {
       handleCheckVrm((message as CheckVrmMessage).vrm, (message as CheckVrmMessage).source)
         .then(sendResponse)
