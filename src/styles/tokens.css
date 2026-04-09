@@ -1,0 +1,51 @@
+/* CarCheck — Velocity Kinetic design tokens
+   Reference file for the shared design language across all extension UI.
+   In Shadow DOM contexts these values are hardcoded into style strings directly.
+   Keep this file in sync with any color/radius changes. */
+
+:root {
+  /* Brand */
+  --cc-primary:              #00327d;
+  --cc-primary-hover:        #0047ab;
+
+  /* Surfaces (lightest → darkest) */
+  --cc-surface-lowest:       #ffffff;
+  --cc-surface:              #f7f9fb;
+  --cc-surface-low:          #f2f4f6;
+  --cc-surface-container:    #eceef0;
+  --cc-surface-high:         #e6e8ea;
+  --cc-surface-highest:      #e0e3e5;
+
+  /* Text */
+  --cc-on-surface:           #191c1e;
+  --cc-on-surface-variant:   #434653;
+  --cc-secondary:            #515f74;
+  --cc-outline-variant:      #c3c6d5;
+
+  /* Verdict — Avoid / Critical */
+  --cc-error:                #ba1a1a;
+  --cc-error-container:      #ffdad6;
+
+  /* Verdict — Caution / Warning */
+  --cc-tertiary:             #651f00;
+  --cc-tertiary-fixed:       #ffdbcf;
+  --cc-caution-border:       #ea580c;
+  --cc-caution-bg:           #fff7ed;
+
+  /* Verdict — OK */
+  --cc-ok-border:            #d4a017;
+  --cc-ok-bg:                #fffcf0;
+
+  /* Verdict — Great / Pass */
+  --cc-green:                #16a34a;
+  --cc-green-bg:             #f0fdf4;
+
+  /* Special */
+  --cc-plate-yellow:         #FFD500;
+
+  /* Border radius scale */
+  --cc-radius-tight:         0.125rem;   /* 2px  — tight elements */
+  --cc-radius-card:          0.25rem;    /* 4px  — cards, panels  */
+  --cc-radius-overlay:       0.5rem;     /* 8px  — modals         */
+  --cc-radius-pill:          0.75rem;    /* 12px — verdict badges */
+}

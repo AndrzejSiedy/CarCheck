@@ -76,11 +76,6 @@ async function handleCheckVrm(vrm: string, source: ScanResult['source']): Promis
     return { ok: true, result: { ...cached, cached: true } };
   }
 
-  // 2. Check free tier limit
-  if (!(await isWithinFreeLimit())) {
-    return { ok: false, error: 'LIMIT_REACHED' };
-  }
-
   // 3. Fetch MOT data from DVSA API
   const history = await fetchDvsaHistory(vrm);
 

@@ -17,12 +17,14 @@ Chrome extension for UK car buyers. Reads plates via OCR, fetches DVSA MOT histo
 - Follow Spec Driven Development pattern
 - Always git pull before starting work
 - Read /docs before writing any code
+- **Update `/docs/progress.md` with every commit** — it is the canonical implementation tracker
 - When you discover a design gap or make an implementation decision that changes the design, update the relevant file in /docs and commit it with a clear message before continuing
 - Never modify /docs/spec.md without logging the reason in /docs/decisions.md
 - /src is for code. /docs is for specs and decisions. Keep them separate.
 
 ## Key files
 
+- /docs/progress.md — **canonical implementation tracker** (what's built, what's not, known issues)
 - /docs/spec.md — master product specification
 - /docs/architecture.md — technical architecture and data flows
 - /docs/implementation-plan.md — phased build plan (Walking Skeleton → paid tier)

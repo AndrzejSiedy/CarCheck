@@ -1,47 +1,151 @@
-/* Popup styles — Phase 0 placeholder. Full design in /docs/ui-design-brief.md */
+/* CarCheck popup — Velocity Kinetic design system */
 
-* { box-sizing: border-box; margin: 0; padding: 0; }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {
-  width: 280px;
+  width: 360px;
+  height: 500px;
+  display: flex;
+  flex-direction: column;
   font-family: Inter, system-ui, sans-serif;
   font-size: 13px;
   color: #191c1e;
   background: #f7f9fb;
+  overflow: hidden;
 }
 
-.header {
+/* ── header ── */
+
+header {
   background: #00327d;
   color: #fff;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 10px 14px;
+  padding: 12px 14px;
+  flex-shrink: 0;
 }
 
-.logo { font-weight: 700; font-size: 14px; letter-spacing: 0.04em; }
-
-.phase {
-  font-size: 10px;
-  opacity: 0.6;
-  font-weight: 500;
+.logo {
+  font-weight: 700;
+  font-size: 14px;
   letter-spacing: 0.06em;
-  text-transform: uppercase;
 }
-
-.body { padding: 16px 14px; }
-
-.body p { color: #434653; line-height: 1.5; margin-bottom: 16px; }
 
 .usage {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  background: #eceef0;
-  border-radius: 4px;
-  padding: 8px 10px;
+  font-size: 11px;
+  opacity: 0.6;
+  font-weight: 500;
+  letter-spacing: 0.03em;
 }
 
-.usage-label { flex: 1; color: #434653; }
-.usage-count { font-weight: 700; color: #00327d; font-size: 15px; }
-.usage-limit { color: #434653; }
+/* ── subheader strip ── */
+
+.subheader {
+  background: #f2f4f6;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: #515f74;
+  padding: 7px 14px;
+  flex-shrink: 0;
+}
+
+/* ── card list ── */
+
+#cc-list {
+  flex: 1;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.card {
+  padding: 11px 14px;
+  transition: background 0.1s;
+  cursor: default;
+}
+
+.card + .card {
+  border-top: 1px solid rgba(195,198,213,0.25);
+}
+
+.card:hover { background: #e6e8ea; }
+
+.card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 5px;
+}
+
+.vrm-plate {
+  background: #FFD500;
+  color: #000;
+  font-weight: 800;
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  padding: 2px 8px;
+  border-radius: 2px;
+}
+
+.verdict-badge {
+  display: inline-flex;
+  align-items: center;
+  height: 20px;
+  padding: 0 7px;
+  border-radius: 10px;
+  border-left: 3px solid transparent;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.card-vehicle {
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  margin-bottom: 4px;
+  color: #191c1e;
+}
+
+.card-meta {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  color: #515f74;
+}
+
+.spacer { flex: 1; }
+
+.dot { opacity: 0.35; }
+
+.time { color: #434653; }
+
+/* ── empty state ── */
+
+.empty {
+  padding: 40px 20px;
+  text-align: center;
+}
+
+.empty-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: #191c1e;
+  margin-bottom: 8px;
+}
+
+.empty-sub {
+  font-size: 12px;
+  line-height: 1.55;
+  color: #515f74;
+}
+
+/* ── bottom accent ── */
+
+.bottom-accent {
+  height: 4px;
+  background: #00327d;
+  flex-shrink: 0;
+}

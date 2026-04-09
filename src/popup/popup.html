@@ -7,18 +7,13 @@
     <link rel="stylesheet" href="popup.css" />
   </head>
   <body>
-    <div class="header">
+    <header>
       <span class="logo">CarCheck</span>
-      <span class="phase">Phase 0</span>
-    </div>
-    <div class="body">
-      <p id="cc-msg">—</p>
-      <div class="usage">
-        <span class="usage-label">Free checks used</span>
-        <span class="usage-count" id="usage">—</span>
-        <span class="usage-limit">/ 3</span>
-      </div>
-    </div>
+      <span class="usage" id="cc-usage"></span>
+    </header>
+    <div class="subheader">RECENT CHECKS</div>
+    <div id="cc-list"></div>
+    <div class="bottom-accent"></div>
     <script src="popup.js"></script>
   </body>
 </html>
