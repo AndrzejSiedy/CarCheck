@@ -4,7 +4,21 @@
 // Output structure mirrors src/ — Chrome loads the extension from dist/
 
 import * as esbuild from 'esbuild';
-import { cpSync, existsSync, mkdirSync, writeFileSync } from 'fs';
+import { cpSync, existsSync, mkdirSync, readFileSync, writeFileSync } from 'fs';
+
+// Load .env into esbuild define map so env vars are inlined at build time.
+// Only variables prefixed with DVSA_ or GOOGLE_ are injected (no accidental leaks).
+function loadEnvDefines() {
+  const defines = {};
+  try {
+    const raw = readFileSync('.env', 'utf8');
+    for (const line of raw.split(/\r?\n/)) {
+      const match = line.match(/^(PROXY_\w+|DVSA_\w+|GOOGLE_\w+)=(.*)$/);
+      if (match) defines[`process.env.${match[1]}`] = JSON.stringify(match[2].trim());
+    }
+  } catch { /* no .env — CI will provide vars another way */ }
+  return defines;
+}
 
 const watch = process.argv.includes('--watch');
 
@@ -39,17 +53,18 @@ function copyStatic() {
 // Chrome supports SIMD, so use the simd-lstm variant (best accuracy).
 function copyTesseract() {
   mkdirSync('dist/lib', { recursive: true });
-  cpSync('node_modules/tesseract.js/dist/worker.min.js',
-         'dist/lib/worker.min.js');
-  cpSync('node_modules/tesseract.js-core/tesseract-core-simd-lstm.wasm',
-         'dist/lib/tesseract-core-simd-lstm.wasm');
-  cpSync('node_modules/tesseract.js-core/tesseract-core-simd-lstm.js',
-         'dist/lib/tesseract-core-simd-lstm.js');
-  // Fallback for browsers without SIMD
-  cpSync('node_modules/tesseract.js-core/tesseract-core-lstm.wasm',
-         'dist/lib/tesseract-core-lstm.wasm');
-  cpSync('node_modules/tesseract.js-core/tesseract-core-lstm.js',
-         'dist/lib/tesseract-core-lstm.js');
+  cpSync('node_modules/tesseract.js/dist/worker.min.js', 'dist/lib/worker.min.js');
+  // Copy all core variants — Tesseract probes relaxedsimd → simd → fallback at runtime
+  const cores = [
+    'tesseract-core-relaxedsimd-lstm',
+    'tesseract-core-simd-lstm',
+    'tesseract-core-lstm',
+  ];
+  for (const name of cores) {
+    cpSync(`node_modules/tesseract.js-core/${name}.wasm`,    `dist/lib/${name}.wasm`);
+    cpSync(`node_modules/tesseract.js-core/${name}.wasm.js`, `dist/lib/${name}.wasm.js`);
+    cpSync(`node_modules/tesseract.js-core/${name}.js`,      `dist/lib/${name}.js`);
+  }
 }
 
 // Download eng.traineddata.gz if not already cached in dist/lib/
@@ -68,7 +83,7 @@ mkdirSync('dist/lib', { recursive: true });
 copyTesseract();
 await ensureLanguageData();
 
-const buildConfig = { ...sharedConfig, entryPoints, outdir: 'dist' };
+const buildConfig = { ...sharedConfig, entryPoints, outdir: 'dist', define: loadEnvDefines() };
 
 if (watch) {
   const ctx = await esbuild.context(buildConfig);

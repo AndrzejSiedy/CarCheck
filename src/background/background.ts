@@ -1,45 +1,61 @@
 // Service worker — message routing, API calls, caching, auth
-// Phase 0: returns mock DVSA data. Phase 1: real DVSA API fetch.
 
 import { score } from '../scoring/engine';
 import { getCached, setCache, isWithinFreeLimit, incrementUsage } from '../utils/cache';
 import type { MotHistory, ScanResult } from '../types/mot';
 
-// ─── Phase 0 mock data ────────────────────────────────────────────────────────
-// Returned for any VRM until Phase 1 replaces this with a real API call.
+// ─── DVSA proxy ───────────────────────────────────────────────────────────────
+// OAuth2 client credentials can't be redeemed cross-origin from a Chrome extension.
+// All DVSA calls go through our Vercel proxy which holds the credentials server-side.
 
-const MOCK_HISTORY: MotHistory = {
-  registration: 'LD19KXA',
-  make: 'PORSCHE',
-  model: '911 CARRERA S',
-  firstUsedDate: '2019-04-01',
-  motTests: [
-    {
-      completedDate: '2024-03-15',
-      testResult: 'PASSED',
-      odometerValue: 28500,
-      odometerUnit: 'MI',
-      advisories: ['Tyre worn close to legal limit nearside rear'],
-      testStation: 'Porsche Centre London',
-    },
-    {
-      completedDate: '2023-03-10',
-      testResult: 'PASSED',
-      odometerValue: 21200,
-      odometerUnit: 'MI',
-      advisories: [],
-      testStation: 'Porsche Centre London',
-    },
-    {
-      completedDate: '2022-03-08',
-      testResult: 'PASSED',
-      odometerValue: 14800,
-      odometerUnit: 'MI',
-      advisories: [],
-      testStation: 'Porsche Centre London',
-    },
-  ],
-};
+declare const process: { env: Record<string, string> };
+
+const PROXY_BASE = process.env.PROXY_BASE_URL;
+
+// ─── DVSA response → MotHistory mapper ───────────────────────────────────────
+
+interface DvsaDefect { text: string; type: string; dangerous?: boolean }
+interface DvsaTest {
+  completedDate: string;
+  testResult: string;
+  odometerValue: string;
+  odometerUnit: string;
+  defects?: DvsaDefect[];
+}
+interface DvsaResponse {
+  registration: string;
+  make: string;
+  model: string;
+  firstUsedDate: string;
+  motTests?: DvsaTest[];
+}
+
+function mapDvsaResponse(raw: DvsaResponse): MotHistory {
+  return {
+    registration: raw.registration,
+    make: raw.make,
+    model: raw.model,
+    firstUsedDate: raw.firstUsedDate.substring(0, 10),
+    motTests: (raw.motTests ?? []).map(t => ({
+      completedDate: t.completedDate.substring(0, 10),
+      testResult: t.testResult === 'PASSED' ? 'PASSED' : 'FAILED',
+      odometerValue: parseInt(t.odometerValue, 10) || 0,
+      odometerUnit: t.odometerUnit === 'KM' ? 'KM' : 'MI',
+      advisories: (t.defects ?? [])
+        .filter(d => d.type === 'ADVISORY')
+        .map(d => d.text),
+    })),
+  };
+}
+
+async function fetchDvsaHistory(vrm: string): Promise<MotHistory> {
+  const res = await fetch(`${PROXY_BASE}/api/mot?vrm=${encodeURIComponent(vrm)}`);
+  if (!res.ok) {
+    const body = await res.text().catch(() => '');
+    throw new Error(`DVSA proxy error: ${res.status} ${body}`);
+  }
+  return mapDvsaResponse(await res.json() as DvsaResponse);
+}
 
 // ─── message handler ──────────────────────────────────────────────────────────
 
@@ -65,8 +81,8 @@ async function handleCheckVrm(vrm: string, source: ScanResult['source']): Promis
     return { ok: false, error: 'LIMIT_REACHED' };
   }
 
-  // 3. Fetch MOT data (Phase 0: mock)
-  const history: MotHistory = { ...MOCK_HISTORY, registration: vrm };
+  // 3. Fetch MOT data from DVSA API
+  const history = await fetchDvsaHistory(vrm);
 
   // 4. Score
   const { score: points, verdict, flags } = score(history);
@@ -107,14 +123,21 @@ chrome.runtime.onMessage.addListener(
     if (message.type === 'CHECK_VRM') {
       handleCheckVrm((message as CheckVrmMessage).vrm, (message as CheckVrmMessage).source)
         .then(sendResponse)
-        .catch(() => sendResponse({ ok: false, error: 'UNKNOWN' }));
+        .catch((err: unknown) => {
+          const msg = err instanceof Error ? err.message : String(err);
+          console.error('[CarCheck] CHECK_VRM failed:', msg);
+          sendResponse({ ok: false, error: 'UNKNOWN', detail: msg });
+        });
       return true;
     }
 
     if (message.type === 'CAPTURE_TAB') {
       chrome.tabs.captureVisibleTab({ format: 'png' })
         .then(dataUrl => sendResponse({ dataUrl }))
-        .catch(() => sendResponse({ dataUrl: null }));
+        .catch((err: unknown) => {
+          console.error('[CarCheck] CAPTURE_TAB failed:', err instanceof Error ? err.message : String(err));
+          sendResponse({ dataUrl: null });
+        });
       return true;
     }
   }

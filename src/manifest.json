@@ -5,10 +5,11 @@
   "description": "Instant MOT insights for UK car buyers",
   "permissions": ["activeTab", "storage", "tabs"],
   "host_permissions": [
-    "https://www.autotrader.co.uk/*",
-    "https://www.ebay.co.uk/*",
-    "https://www.gumtree.com/*",
-    "https://www.facebook.com/marketplace/*"
+    "<all_urls>",
+    "https://history.mot.api.gov.uk/*",
+    "https://login.microsoftonline.com/*",
+    "https://carcheck-api.vercel.app/*",
+    "http://localhost:3000/*"
   ],
   "action": {
     "default_popup": "popup/popup.html"
@@ -38,9 +39,14 @@
     {
       "resources": [
         "lib/worker.min.js",
+        "lib/tesseract-core-relaxedsimd-lstm.wasm",
+        "lib/tesseract-core-relaxedsimd-lstm.wasm.js",
+        "lib/tesseract-core-relaxedsimd-lstm.js",
         "lib/tesseract-core-simd-lstm.wasm",
+        "lib/tesseract-core-simd-lstm.wasm.js",
         "lib/tesseract-core-simd-lstm.js",
         "lib/tesseract-core-lstm.wasm",
+        "lib/tesseract-core-lstm.wasm.js",
         "lib/tesseract-core-lstm.js",
         "lib/eng.traineddata.gz"
       ],

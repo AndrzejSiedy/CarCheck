@@ -85,6 +85,24 @@ const BAR_STYLES = `
     font-weight: 600;
     cursor: pointer;
   }
+  #cc-ocr-btn {
+    background: rgba(255,255,255,0.15);
+    color: #fff;
+    border: 1px solid rgba(255,255,255,0.3);
+    border-radius: 2px;
+    padding: 6px 12px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    letter-spacing: 0.03em;
+    white-space: nowrap;
+  }
+  #cc-ocr-btn:hover { background: rgba(255,255,255,0.25); }
+  #cc-ocr-btn.active {
+    background: #fbbf24;
+    color: #1a1a1a;
+    border-color: #fbbf24;
+  }
   #cc-close {
     background: none;
     border: none;
@@ -103,6 +121,7 @@ const BAR_HTML = `
     <label>CarCheck</label>
     <input id="cc-input" type="text" placeholder="AB12 CDE" maxlength="8" spellcheck="false" />
     <button id="cc-btn">Check</button>
+    <button id="cc-ocr-btn" title="Drag to select a number plate (Alt+C)">Scan plate</button>
     <span id="cc-status"></span>
     <span id="cc-badge"></span>
     <button id="cc-close" title="Close">×</button>
@@ -128,13 +147,21 @@ function inject(source: Source): void {
 
   document.body.insertBefore(host, document.body.firstChild);
 
-  const input   = shadow.getElementById('cc-input')  as HTMLInputElement;
-  const btn     = shadow.getElementById('cc-btn')     as HTMLButtonElement;
-  const status  = shadow.getElementById('cc-status')  as HTMLSpanElement;
-  const badge   = shadow.getElementById('cc-badge')   as HTMLSpanElement;
-  const close   = shadow.getElementById('cc-close')   as HTMLButtonElement;
+  const input   = shadow.getElementById('cc-input')   as HTMLInputElement;
+  const btn     = shadow.getElementById('cc-btn')      as HTMLButtonElement;
+  const ocrBtn  = shadow.getElementById('cc-ocr-btn')  as HTMLButtonElement;
+  const status  = shadow.getElementById('cc-status')   as HTMLSpanElement;
+  const badge   = shadow.getElementById('cc-badge')    as HTMLSpanElement;
+  const close   = shadow.getElementById('cc-close')    as HTMLButtonElement;
 
   close.addEventListener('click', () => host.remove());
+
+  function setOcrActive(active: boolean) {
+    ocrBtn.classList.toggle('active', active);
+    ocrBtn.textContent = active ? 'Scanning… (Esc)' : 'Scan plate';
+  }
+
+  ocrBtn.addEventListener('click', () => triggerOCR());
 
   async function submit(): Promise<void> {
     const raw = input.value.trim();
@@ -155,7 +182,7 @@ function inject(source: Source): void {
         if (response.error === 'LIMIT_REACHED') {
           status.textContent = '3 free checks used — upgrade for more';
         } else {
-          status.textContent = 'Something went wrong';
+          status.textContent = `Error: ${(response as { detail?: string }).detail ?? 'unknown'}`;
         }
         return;
       }
@@ -187,27 +214,37 @@ function inject(source: Source): void {
   document.addEventListener('keydown', (e: KeyboardEvent) => {
     if (e.altKey && (e.key === 'c' || e.key === 'C' || e.code === 'KeyC')) {
       e.preventDefault();
-      launchOCR();
+      triggerOCR();
     }
   }, true); // capture phase — fires before site handlers can stop it
-}
 
-function launchOCR() {
-  const host = document.getElementById('carcheck-host');
-  if (!host) return;
-  const shadow = host.shadowRoot!;
-  const input = shadow.getElementById('cc-input') as HTMLInputElement;
-
-  showOCROverlay(
-    (vrm) => {
-      input.value = vrm;
-      input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
-    },
-    () => { /* cancelled */ }
-  );
+  function triggerOCR() {
+    setOcrActive(true);
+    showOCROverlay(
+      (vrm) => {
+        setOcrActive(false);
+        input.value = vrm;
+        submit();
+      },
+      () => setOcrActive(false)
+    );
+  }
 }
 
 // ─── Chrome command listener (Alt+C registered in manifest) ──────────────────
+
+function launchOCR() {
+  // Re-inject bar if it was dismissed, so the VRM result has somewhere to go
+  const currentSource = detectSource();
+  if (currentSource && !document.getElementById('carcheck-host')) inject(currentSource);
+  // triggerOCR is scoped inside inject(); re-fire via keydown simulation isn't clean,
+  // so we directly call showOCROverlay here for the command path.
+  const host = document.getElementById('carcheck-host');
+  if (!host) return;
+  const shadow = host.shadowRoot!;
+  const ocrBtn = shadow.getElementById('cc-ocr-btn') as HTMLButtonElement;
+  ocrBtn?.click();
+}
 
 chrome.runtime.onMessage.addListener((message) => {
   if (message.type === 'LAUNCH_OCR') launchOCR();

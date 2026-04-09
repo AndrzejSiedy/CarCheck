@@ -8,7 +8,8 @@
     "build": "node build.js",
     "watch": "node build.js --watch",
     "typecheck": "tsc --noEmit",
-    "dev": "concurrently -n esbuild,chrome -c blue,green \"node build.js --watch\" \"node scripts/chrome.mjs\""
+    "dev": "concurrently -n esbuild,chrome -c blue,green \"node build.js --watch\" \"node scripts/chrome.mjs\"",
+    "proxy": "node scripts/proxy.mjs"
   },
   "devDependencies": {
     "@types/chrome": "^0.0.268",

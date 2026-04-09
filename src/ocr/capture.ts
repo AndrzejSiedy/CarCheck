@@ -233,7 +233,10 @@ export function showOCROverlay(
   document.addEventListener('keydown', escHandler);
 
   overlay.addEventListener('mousedown', (e: MouseEvent) => {
-    if ((e.target as Element).id === 'cc-cancel') return;
+    // Only start a new drag when clicking directly on the overlay background.
+    // Clicks on the cancel button, confirm box, or selection box must not reset state.
+    const target = e.target as Element;
+    if (target.id !== 'cc-ocr-overlay') return;
     dragging = true;
     startX = e.clientX; startY = e.clientY;
     hint.style.display = 'none';
@@ -279,8 +282,10 @@ export function showOCROverlay(
       vrmConfirm.style.display = 'flex';
       vrmInput.focus();
 
-    } catch {
-      scanStatus.textContent = 'Scan failed — try again';
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : String(err);
+      console.error('[CarCheck OCR]', msg);
+      scanStatus.textContent = `Scan failed: ${msg}`;
     }
   });
 
