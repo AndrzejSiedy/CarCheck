@@ -51,6 +51,7 @@ function mapDvsaResponse(raw: DvsaResponse): MotHistory {
 async function fetchDvsaHistory(vrm: string): Promise<MotHistory> {
   const res = await fetch(`${PROXY_BASE}/api/mot?vrm=${encodeURIComponent(vrm)}`);
   if (!res.ok) {
+    if (res.status === 404) throw Object.assign(new Error('NOT_FOUND'), { code: 'NOT_FOUND' });
     const body = await res.text().catch(() => '');
     throw new Error(`DVSA proxy error: ${res.status} ${body}`);
   }
@@ -67,7 +68,7 @@ interface CheckVrmMessage {
 
 type CheckVrmResponse =
   | { ok: true;  result: ScanResult }
-  | { ok: false; error: 'LIMIT_REACHED' | 'UNKNOWN' };
+  | { ok: false; error: 'LIMIT_REACHED' | 'NOT_FOUND' | 'UNKNOWN' };
 
 async function handleCheckVrm(vrm: string, source: ScanResult['source']): Promise<CheckVrmResponse> {
   // 1. Check cache
@@ -119,6 +120,10 @@ chrome.runtime.onMessage.addListener(
       handleCheckVrm((message as CheckVrmMessage).vrm, (message as CheckVrmMessage).source)
         .then(sendResponse)
         .catch((err: unknown) => {
+          if (err instanceof Error && (err as Error & { code?: string }).code === 'NOT_FOUND') {
+            sendResponse({ ok: false, error: 'NOT_FOUND' });
+            return;
+          }
           const msg = err instanceof Error ? err.message : String(err);
           console.error('[CarCheck] CHECK_VRM failed:', msg);
           sendResponse({ ok: false, error: 'UNKNOWN', detail: msg });

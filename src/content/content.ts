@@ -744,9 +744,13 @@ function inject(source: Source): void {
       const response = await chrome.runtime.sendMessage({ type: 'CHECK_VRM', vrm, source });
 
       if (!response.ok) {
-        status.textContent = response.error === 'LIMIT_REACHED'
-          ? '3 free checks used — upgrade for more'
-          : `Error: ${(response as { detail?: string }).detail ?? 'unknown'}`;
+        if (response.error === 'LIMIT_REACHED') {
+          status.textContent = '3 free checks used — upgrade for more';
+        } else if (response.error === 'NOT_FOUND') {
+          status.textContent = `No record found for ${vrm} — check the plate and try again`;
+        } else {
+          status.textContent = `Error: ${(response as { detail?: string }).detail ?? 'unknown'}`;
+        }
         return;
       }
 
