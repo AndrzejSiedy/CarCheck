@@ -145,6 +145,31 @@ const BAR_STYLES = `
     margin-left: auto;
   }
   #cc-close:hover { color: #fff; }
+  /* Collapsed / minimised state */
+  #cc-bar.collapsed {
+    left: auto;
+    right: 0;
+    padding: 7px 12px;
+    border-radius: 0 0 0 6px;
+    box-shadow: -2px 2px 10px rgba(0,0,0,0.2);
+    cursor: pointer;
+  }
+  #cc-bar.collapsed #cc-bar-row > :not(#cc-restore) { display: none !important; }
+  #cc-bar.collapsed #cc-flags { display: none !important; }
+  #cc-restore {
+    display: none;
+    background: none;
+    border: none;
+    color: #fff;
+    font: 700 13px/1 Inter, system-ui, sans-serif;
+    cursor: pointer;
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+    padding: 0;
+    align-items: center;
+    gap: 6px;
+  }
+  #cc-bar.collapsed #cc-restore { display: flex; }
   #cc-flags {
     display: none;
     flex-wrap: wrap;
@@ -184,7 +209,8 @@ const BAR_HTML = `
       <button id="cc-ocr-btn" title="Drag to select a number plate (Alt+C)">Scan plate</button>
       <span id="cc-status"></span>
       <span id="cc-badge"></span>
-      <button id="cc-close" title="Close">×</button>
+      <button id="cc-restore" title="Expand CarCheck">▲ CarCheck</button>
+      <button id="cc-close" title="Minimise">—</button>
     </div>
     <div id="cc-flags"></div>
   </div>
@@ -714,9 +740,16 @@ function inject(source: Source): void {
   const flags  = shadow.getElementById('cc-flags')    as HTMLDivElement;
   const close  = shadow.getElementById('cc-close')    as HTMLButtonElement;
 
+  const bar = shadow.getElementById('cc-bar')!;
+  const restore = shadow.getElementById('cc-restore') as HTMLButtonElement;
+
   close.addEventListener('click', () => {
-    host.remove();
+    bar.classList.add('collapsed');
     document.getElementById('carcheck-panel-host')?.remove();
+  });
+
+  restore.addEventListener('click', () => {
+    bar.classList.remove('collapsed');
   });
 
   function setOcrActive(active: boolean): void {
