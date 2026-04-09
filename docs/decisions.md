@@ -12,8 +12,8 @@ All source files are `.ts`. esbuild compiles to `dist/` — manifest points at c
 **Shadow DOM for all injected UI.**
 Prevents host page CSS leaking into CarCheck components and vice versa. Required on Facebook Marketplace and eBay which have aggressive global styles.
 
-**DVSA API key in `chrome.storage.local` for Phase 0–3.**
-Developer-only convenience. Moves to a Vercel backend proxy in Phase 4 before any public release. API key must never ship to end users inside the extension bundle.
+**DVSA proxy moved from Phase 4 to Phase 1.**
+Azure AD's token endpoint returns `AADSTS9002326` for any request with `Origin: chrome-extension://` — cross-origin token redemption is only permitted for SPA-type app registrations, and client credentials flow doesn't support SPA type. The extension cannot fetch OAuth2 tokens directly. A server-side proxy (`scripts/proxy.mjs` for dev, `api/mot.ts` for Vercel) is required from day one. Credentials are never bundled into the extension.
 
 **`chrome.storage.local` over `chrome.storage.sync` for all data.**
 `sync` is limited to 100KB total and 8KB per item — insufficient for scan history. `local` limit is 10MB. Shortlist, cache, settings, and usage counter all use `local`.

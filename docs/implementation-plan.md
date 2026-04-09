@@ -66,29 +66,50 @@ async function setCache(vrm: string, result: ScanResult): Promise<void> { ... }
 
 ---
 
-## Phase 1 — Real DVSA Data
+## Phase 1 — Real DVSA Data ✅
 
 **Goal:** Replace mock data with live DVSA MOT History API calls.
 
-### What to build
+### What was built
 
-**`src/background/background.ts`** — add DVSA fetch:
+**`scripts/proxy.mjs`** — local Node.js proxy (run with `npm run proxy`):
+
+- Handles OAuth2 client credentials flow server-side (Azure AD token endpoint rejects `chrome-extension://` origin — see decisions.md)
+- Fetches DVSA MOT data and returns it to the extension
+- Token is cached in-memory for 1 hour
+
+**`api/mot.ts`** — Vercel Edge Function (future deployment):
+
+- Same logic as proxy.mjs, packaged for Vercel production deployment
+- Credentials stored in Vercel environment variables (not in extension bundle)
+
+**`src/background/background.ts`** — calls proxy instead of DVSA directly:
 
 ```ts
-// DVSA MOT History API v1
-// GET https://history.mot.api.gov.uk/v1/trade/vehicles/registration/{vrm}
-// Auth: x-api-key header
+GET http://localhost:3000/api/mot?vrm={vrm}   // dev
+GET https://carcheck-api.vercel.app/api/mot?vrm={vrm}  // prod
 ```
 
-- Store API key in `chrome.storage.local` (set once during dev, later via backend proxy)
-- Parse DVSA response → `MotHistory` object → pass to scoring engine
-- Cache result 24hr per VRM
+**`src/manifest.json`** — `host_permissions` includes `<all_urls>` (required for `captureVisibleTab`) plus proxy URLs.
 
-**`src/manifest.json`** — add `history.mot.api.gov.uk` to `host_permissions`.
+### Local dev requirement
 
-**`docs/open-questions.md`** — log: DVSA API requires registration + OAuth2 for production; during dev use test key.
+**The proxy must be running whenever you test the extension locally:**
 
-**Test:** Real VRM → live data → correct score. Compare result against manual check on check.mot.gov.uk.
+```bash
+npm run proxy   # starts http://localhost:3000
+```
+
+The extension reads `PROXY_BASE_URL` from `.env` at build time (injected by esbuild). Default is `http://localhost:3000` for dev. Change to your Vercel URL before building for production.
+
+### Deployment (when ready)
+
+1. `npx vercel deploy --prod` from repo root
+2. Add all `DVSA_*` vars in Vercel dashboard → Settings → Environment Variables
+3. Update `.env` → `PROXY_BASE_URL=https://your-project.vercel.app`
+4. `npm run build` → reload extension
+
+**Test:** `npm run proxy` → reload extension → type real VRM → live DVSA score. Compare against check.mot.gov.uk.
 
 ---
 
