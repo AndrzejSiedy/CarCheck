@@ -121,6 +121,30 @@ function ruleMOTGaps(tests: MotTest[]): { points: number; flag: Flag | null } {
   };
 }
 
+function ruleTaxiPattern(tests: MotTest[]): { points: number; flag: Flag | null } {
+  if (tests.length < 4) return { points: 0, flag: null };
+
+  // Count consecutive pairs where gap is 5–7 months (6-monthly MOT cadence)
+  let taxiGaps = 0;
+  for (let i = 0; i < tests.length - 1; i++) {
+    const gap = monthsBetween(tests[i].completedDate, tests[i + 1].completedDate);
+    if (gap >= 5 && gap <= 7) taxiGaps++;
+  }
+
+  const ratio = taxiGaps / (tests.length - 1);
+  if (ratio < 0.5) return { points: 0, flag: null };
+
+  return {
+    points: -15,
+    flag: {
+      type: 'advisory',
+      severity: 'warning',
+      label: 'Probable taxi or private hire history',
+      detail: `${taxiGaps} of ${tests.length - 1} MOT intervals are ~6 months apart — the legal cadence for UK taxis. Expect higher wear than mileage suggests.`,
+    },
+  };
+}
+
 function ruleCleanStreak(tests: MotTest[]): { points: number; flag: Flag | null } {
   let streak = 0;
   for (const t of tests) {
@@ -172,9 +196,10 @@ export function score(history: MotHistory): ScoringResult {
   const r3 = ruleMileageRollback(history.motTests);
   const r4 = ruleMOTGaps(history.motTests);
   const r5 = ruleCleanStreak(history.motTests);
+  const r6 = ruleTaxiPattern(history.motTests);
 
-  points = r1.points + r2.points + r3.points + r4.points + r5.points;
-  [r1.flag, r2.flag, r3.flag, r4.flag, r5.flag]
+  points = r1.points + r2.points + r3.points + r4.points + r5.points + r6.points;
+  [r1.flag, r2.flag, r3.flag, r4.flag, r5.flag, r6.flag]
     .filter((f): f is Flag => f !== null)
     .forEach(f => flags.push(f));
 

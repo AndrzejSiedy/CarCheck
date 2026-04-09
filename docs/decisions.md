@@ -18,5 +18,8 @@ Azure AD's token endpoint returns `AADSTS9002326` for any request with `Origin: 
 **`chrome.storage.local` over `chrome.storage.sync` for all data.**
 `sync` is limited to 100KB total and 8KB per item — insufficient for scan history. `local` limit is 10MB. Shortlist, cache, settings, and usage counter all use `local`.
 
+**Taxi pattern detection added to scoring engine (2026-04-09).**
+UK taxis are legally required to have an MOT every 6 months. A consistent 5–7 month gap between tests across ≥4 tests is a reliable indicator of taxi or private hire use. This matters for buyers because taxis accumulate high mileage faster than odometer readings suggest, and commercial use affects wear patterns and insurance history. Rule: if ≥50% of consecutive test pairs show a 5–7 month gap, deduct 15 points and raise a `warning` flag. Requires ≥4 tests to avoid false positives on young vehicles.
+
 **Tailwind via CDN in Stitch design files only.**
 CDN is unusable inside Chrome extensions (CSP blocks external scripts). In production: extract only used CSS classes from design files into a static `src/styles/tokens.css` stylesheet.
