@@ -32,21 +32,24 @@ const sharedConfig = {
 // TypeScript entry points → compiled JS bundles
 // 'out' paths are relative to outdir ('dist/')
 const entryPoints = [
-  { in: 'src/background/background.ts', out: 'background/background' },
-  { in: 'src/content/content.ts',       out: 'content/content' },
-  { in: 'src/popup/popup.ts',           out: 'popup/popup' },
-  { in: 'src/ocr/capture.ts',           out: 'ocr/capture' },
+  { in: 'src/background/background.ts',  out: 'background/background' },
+  { in: 'src/content/content.ts',        out: 'content/content' },
+  { in: 'src/popup/popup.ts',            out: 'popup/popup' },
+  { in: 'src/ocr/capture.ts',            out: 'ocr/capture' },
+  { in: 'src/offscreen/offscreen.ts',    out: 'offscreen/offscreen' },
 ];
 
 // Copy static assets from src/ to dist/
 function copyStatic() {
-  mkdirSync('dist/popup', { recursive: true });
-  mkdirSync('dist/content', { recursive: true });
-  mkdirSync('dist/icons', { recursive: true });
-  cpSync('src/manifest.json', 'dist/manifest.json');
-  cpSync('src/popup/popup.html', 'dist/popup/popup.html');
-  cpSync('src/popup/popup.css', 'dist/popup/popup.css');
-  cpSync('src/content/content.css', 'dist/content/content.css');
+  mkdirSync('dist/popup',     { recursive: true });
+  mkdirSync('dist/content',   { recursive: true });
+  mkdirSync('dist/icons',     { recursive: true });
+  mkdirSync('dist/offscreen', { recursive: true });
+  cpSync('src/manifest.json',               'dist/manifest.json');
+  cpSync('src/popup/popup.html',            'dist/popup/popup.html');
+  cpSync('src/popup/popup.css',             'dist/popup/popup.css');
+  cpSync('src/content/content.css',         'dist/content/content.css');
+  cpSync('src/offscreen/offscreen.html',    'dist/offscreen/offscreen.html');
 }
 
 // Copy Tesseract.js worker + WASM core files to dist/lib/

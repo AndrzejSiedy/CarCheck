@@ -1,7 +1,6 @@
 // OCR capture — drag-to-select overlay, Tesseract.js integration
 // Phase 2: free tier client-side OCR via Tesseract.js (lazy-loaded).
 
-import { createWorker } from 'tesseract.js';
 import { isValidVRM, normalise } from '../utils/vrm';
 
 // ─── overlay styles ───────────────────────────────────────────────────────────
@@ -137,21 +136,6 @@ const OVERLAY_HTML = `
   </div>
 `;
 
-// ─── Tesseract (lazy singleton) ───────────────────────────────────────────────
-
-let tesseractWorker: Awaited<ReturnType<typeof createWorker>> | null = null;
-
-async function getTesseractWorker() {
-  if (tesseractWorker) return tesseractWorker;
-  tesseractWorker = await createWorker('eng', 1, {
-    workerPath: chrome.runtime.getURL('lib/worker.min.js'),
-    corePath:   chrome.runtime.getURL('lib/'),
-    langPath:   chrome.runtime.getURL('lib/'),
-    cacheMethod: 'none',
-    logger: () => {},
-  });
-  return tesseractWorker;
-}
 
 function extractVRM(text: string): string | null {
   const cleaned = text.replace(/[^A-Z0-9]/gi, ' ').toUpperCase();
@@ -268,16 +252,16 @@ export function showOCROverlay(
       const dpr = window.devicePixelRatio || 1;
       const cropped = await cropScreenshot(response.dataUrl, rect, dpr);
 
-      const worker = await getTesseractWorker();
-      const { data } = await worker.recognize(cropped);
-      const vrm = extractVRM(data.text);
+      const ocrResult = await chrome.runtime.sendMessage({ type: 'OCR_RECOGNIZE', dataUrl: cropped });
+      if (ocrResult?.error) throw new Error(ocrResult.error);
+      const vrm = extractVRM(ocrResult.text);
 
       scanStatus.style.display = 'none';
 
       if (vrm && isValidVRM(vrm)) {
         vrmInput.value = normalise(vrm);
       } else {
-        vrmInput.value = data.text.replace(/[^A-Z0-9]/gi, '').toUpperCase().slice(0, 8);
+        vrmInput.value = ocrResult.text.replace(/[^A-Z0-9]/gi, '').toUpperCase().slice(0, 8);
       }
       vrmConfirm.style.display = 'flex';
       vrmInput.focus();

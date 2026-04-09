@@ -103,6 +103,21 @@ async function handleCheckVrm(vrm: string, source: ScanResult['source']): Promis
   return { ok: true, result };
 }
 
+// ─── offscreen document (Tesseract OCR) ──────────────────────────────────────
+
+async function ensureOffscreenDocument(): Promise<void> {
+  const existing = await chrome.runtime.getContexts({
+    contextTypes: [chrome.runtime.ContextType.OFFSCREEN_DOCUMENT],
+  });
+  if (existing.length === 0) {
+    await chrome.offscreen.createDocument({
+      url: 'offscreen/offscreen.html',
+      reasons: [chrome.offscreen.Reason.WORKERS],
+      justification: 'Run Tesseract.js OCR worker in extension context to avoid page CSP',
+    });
+  }
+}
+
 // ─── keyboard command relay ───────────────────────────────────────────────────
 
 chrome.commands.onCommand.addListener(async (command) => {
@@ -115,7 +130,7 @@ chrome.commands.onCommand.addListener(async (command) => {
 // ─── message handler ──────────────────────────────────────────────────────────
 
 chrome.runtime.onMessage.addListener(
-  (message: CheckVrmMessage | { type: 'CAPTURE_TAB' | 'LAUNCH_OCR' }, _sender, sendResponse) => {
+  (message: CheckVrmMessage | { type: 'CAPTURE_TAB' | 'LAUNCH_OCR' | 'OCR_RECOGNIZE'; dataUrl?: string }, _sender, sendResponse) => {
     if (message.type === 'CHECK_VRM') {
       handleCheckVrm((message as CheckVrmMessage).vrm, (message as CheckVrmMessage).source)
         .then(sendResponse)
@@ -128,6 +143,14 @@ chrome.runtime.onMessage.addListener(
           console.error('[CarCheck] CHECK_VRM failed:', msg);
           sendResponse({ ok: false, error: 'UNKNOWN', detail: msg });
         });
+      return true;
+    }
+
+    if (message.type === 'OCR_RECOGNIZE') {
+      ensureOffscreenDocument()
+        .then(() => chrome.runtime.sendMessage({ type: 'OFFSCREEN_OCR', dataUrl: message.dataUrl }))
+        .then(sendResponse)
+        .catch((err: unknown) => sendResponse({ error: err instanceof Error ? err.message : String(err) }));
       return true;
     }
 

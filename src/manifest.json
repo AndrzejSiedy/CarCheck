@@ -3,7 +3,7 @@
   "name": "CarCheck",
   "version": "0.1.0",
   "description": "Instant MOT insights for UK car buyers",
-  "permissions": ["activeTab", "storage", "tabs"],
+  "permissions": ["activeTab", "storage", "tabs", "offscreen"],
   "host_permissions": [
     "<all_urls>",
     "https://history.mot.api.gov.uk/*",
@@ -26,7 +26,7 @@
         "https://www.autotrader.co.uk/*",
         "https://www.ebay.co.uk/*",
         "https://www.gumtree.com/*",
-        "https://www.facebook.com/marketplace/*"
+        "https://www.facebook.com/*"
       ],
       "js": ["content/content.js"],
       "css": ["content/content.css"]

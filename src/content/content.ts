@@ -859,7 +859,34 @@ chrome.runtime.onMessage.addListener((message) => {
   if (message.type === 'LAUNCH_OCR') launchOCR();
 });
 
-// ─── entry point ──────────────────────────────────────────────────────────────
+// ─── entry point + SPA recovery ──────────────────────────────────────────────
 
-const source = detectSource();
-if (source) inject(source);
+function tryInject(): void {
+  const src = detectSource();
+  if (src) {
+    inject(src);
+  } else {
+    // Navigated away from a supported listing page — remove the bar
+    document.getElementById('carcheck-host')?.remove();
+    document.getElementById('carcheck-panel-host')?.remove();
+    document.getElementById('carcheck-onboarding-host')?.remove();
+  }
+}
+
+// Re-inject if Facebook's React unmounts our host element from the DOM
+new MutationObserver(() => {
+  if (detectSource() && !document.getElementById('carcheck-host')) tryInject();
+}).observe(document.body, { childList: true });
+
+// Intercept SPA pushState / replaceState so URL changes trigger a re-check
+(['pushState', 'replaceState'] as const).forEach(method => {
+  const original = history[method].bind(history);
+  history[method] = function (...args: Parameters<typeof history.pushState>) {
+    original(...args);
+    window.dispatchEvent(new Event('cc-navigate'));
+  };
+});
+window.addEventListener('popstate',    tryInject);
+window.addEventListener('cc-navigate', tryInject);
+
+tryInject();
