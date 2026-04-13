@@ -6,3 +6,4 @@ dist/
 *.pem
 .chrome-dev-profile/
 .env.local
+.claude/settings.local.json
