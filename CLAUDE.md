@@ -35,6 +35,23 @@ Chrome extension for UK car buyers. Reads plates via OCR, fetches DVSA MOT histo
 
 ---
 
+## Keeping MASTER.md current
+
+`MASTER.md` is the single source of truth for this project's status, decisions, and next actions. Keep it accurate throughout every session — stale = useless.
+
+**Update MASTER.md when:**
+- A phase or task completes → update `stage`, `health`, section 4 (Current Focus)
+- A decision is made → append to section 7 (Decisions Log): `date — decision — rationale — alternatives rejected`
+- A blocker appears or is resolved → update section 6 (Blocked / Waiting On)
+- Next priorities shift → update section 5 (Next Actions)
+
+**At the end of every session, always:**
+1. Set `last_session` and `last_updated` to today's date
+2. Confirm `stage` and `health` are still accurate
+3. Append one bullet to section 10 (Session Log): `date — what happened — what changed`
+
+---
+
 ## Session memory — READ THIS FIRST
 
 **Before reading any project files**, check the memory index:
