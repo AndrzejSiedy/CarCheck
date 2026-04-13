@@ -5,3 +5,4 @@ dist/
 *.crx
 *.pem
 .chrome-dev-profile/
+.env.local
